@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BSR Rate Breakdown — QS Professional Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0b1929;--navy2:#0f2138;--navy3:#162d4a;--panel:#1a3352;--border:#1e3d63;--teal:#00c2cb;--teal2:#00e5ef;--gold:#f0a500;--gold2:#ffc233;--green:#22c55e;--red:#ef4444;--orange:#f97316;--text:#e8f4fd;--text2:#8ab3d6;--text3:#5a8ab0;--white:#ffffff;--sidebar-w:260px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+header{background:var(--navy2);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:fixed;top:0;left:0;right:0;z-index:100;}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--teal),var(--teal2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:var(--navy);letter-spacing:-0.5px;}
+.logo-text{font-family:'DM Serif Display',serif;font-size:18px;color:var(--white);}
+.logo-text span{color:var(--teal);font-style:italic;}
+.header-actions{display:flex;align-items:center;gap:10px;}
+.btn{padding:8px 16px;border-radius:6px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px;}
+.btn-primary{background:var(--teal);color:var(--navy);}.btn-primary:hover{background:var(--teal2);}
+.btn-gold{background:var(--gold);color:var(--navy);}.btn-gold:hover{background:var(--gold2);}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border);}.btn-ghost:hover{border-color:var(--teal);color:var(--teal);}
+.btn-danger{background:var(--red);color:white;}.btn-danger:hover{background:#dc2626;}
+.btn-orange{background:var(--orange);color:white;}.btn-orange:hover{background:#ea580c;}
+.btn-sm{padding:5px 10px;font-size:12px;}
+.save-indicator{font-size:12px;color:var(--green);opacity:0;transition:opacity 0.3s;}
+.layout{display:flex;margin-top:60px;height:calc(100vh - 60px);}
+aside{width:var(--sidebar-w);background:var(--navy2);border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0;position:fixed;top:60px;bottom:0;left:0;}
+.sidebar-section{padding:10px 0;}
+.sidebar-label{padding:8px 20px 4px;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;}
+.sidebar-item{padding:9px 20px;cursor:pointer;font-size:13px;color:var(--text2);display:flex;align-items:center;gap:10px;transition:all 0.15s;border-left:2px solid transparent;}
+.sidebar-item:hover{background:var(--navy3);color:var(--text);}
+.sidebar-item.active{background:var(--navy3);color:var(--teal);border-left-color:var(--teal);}
+.sidebar-item .badge{margin-left:auto;font-size:10px;background:var(--navy3);color:var(--text3);padding:2px 6px;border-radius:10px;}
+.sidebar-item.active .badge{background:var(--teal);color:var(--navy);}
+main{margin-left:var(--sidebar-w);flex:1;overflow-y:auto;padding:24px;}
+.panel{background:var(--navy2);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;}
+.panel-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.panel-title{font-family:'DM Serif Display',serif;font-size:16px;color:var(--white);}
+.panel-sub{font-size:12px;color:var(--text3);margin-top:2px;}
+.panel-body{padding:20px;}
+.price-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);}
+.price-tab{padding:10px 20px;cursor:pointer;font-size:13px;color:var(--text2);border-bottom:2px solid transparent;transition:all 0.15s;}
+.price-tab.active{color:var(--teal);border-bottom-color:var(--teal);}
+.price-search{padding:12px 20px;display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--border);}
+.search-input{flex:1;background:var(--navy3);border:1px solid var(--border);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;}
+.search-input::placeholder{color:var(--text3);}
+.search-input:focus{outline:none;border-color:var(--teal);}
+table{width:100%;border-collapse:collapse;}
+th{background:var(--navy3);padding:10px 12px;text-align:left;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;position:sticky;top:0;z-index:10;}
+td{padding:9px 12px;font-size:13px;color:var(--text2);border-bottom:1px solid rgba(30,61,99,0.5);}
+tr:hover td{background:rgba(255,255,255,0.02);}
+.code-badge{font-family:'DM Mono',monospace;font-size:11px;background:var(--navy3);color:var(--teal);padding:2px 8px;border-radius:4px;border:1px solid var(--border);}
+.price-input{background:transparent;border:1px solid var(--border);border-radius:4px;padding:5px 8px;color:var(--gold);font-size:13px;font-family:'DM Mono',monospace;width:110px;text-align:right;}
+.price-input:focus{outline:none;border-color:var(--gold);background:var(--navy3);}
+.price-input.has-value{background:rgba(240,165,0,0.08);border-color:rgba(240,165,0,0.4);}
+.manual-input{background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.4);border-radius:4px;padding:4px 8px;color:var(--orange);font-size:12px;font-family:'DM Mono',monospace;width:100px;text-align:right;}
+.manual-input:focus{outline:none;border-color:var(--orange);background:rgba(249,115,22,0.15);}
+.manual-input.has-value{background:rgba(249,115,22,0.12);border-color:rgba(249,115,22,0.6);}
+.item-card{background:var(--navy3);border:1px solid var(--border);border-radius:8px;margin-bottom:16px;overflow:hidden;}
+.item-header{padding:12px 16px;background:var(--panel);display:flex;align-items:flex-start;gap:12px;border-bottom:1px solid var(--border);}
+.item-code{font-family:'DM Mono',monospace;font-size:12px;color:var(--teal);background:rgba(0,194,203,0.1);padding:3px 8px;border-radius:4px;border:1px solid rgba(0,194,203,0.2);white-space:nowrap;}
+.item-desc{font-size:13px;color:var(--text);line-height:1.4;flex:1;}
+.item-analysis{font-size:11px;color:var(--gold);margin-top:4px;}
+.manual-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(249,115,22,0.15);border:1px solid rgba(249,115,22,0.4);color:var(--orange);font-size:10px;padding:2px 8px;border-radius:4px;margin-left:6px;}
+.breakdown-table{width:100%;}
+.breakdown-table th{font-size:10px;padding:7px 10px;background:rgba(15,33,56,0.8);}
+.breakdown-table td{font-size:12px;padding:7px 10px;}
+.breakdown-table td.desc-col{color:var(--text);max-width:300px;}
+.breakdown-table td.ref-col{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);}
+.breakdown-table td.num-col{text-align:right;font-family:'DM Mono',monospace;font-size:12px;}
+.breakdown-table td.rate-col{color:var(--gold);}
+.breakdown-table td.amt-col{color:var(--teal2);}
+.percent-row td{color:var(--text3);font-style:italic;}
+.total-row td{background:rgba(0,194,203,0.05);font-weight:600;border-top:1px solid var(--border);}
+.rate-summary{padding:12px 16px;background:rgba(11,25,41,0.6);display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+.rate-badge{padding:6px 12px;border-radius:6px;font-size:12px;display:flex;align-items:center;gap:6px;}
+.rate-badge .label{color:var(--text3);font-size:11px;}
+.rate-badge .value{font-family:'DM Mono',monospace;font-weight:600;color:var(--gold2);}
+.rate-badge .unit{color:var(--text3);font-size:11px;}
+.rate-badge.primary{background:rgba(240,165,0,0.1);border:1px solid rgba(240,165,0,0.3);}
+.rate-badge.secondary{background:var(--navy3);border:1px solid var(--border);}
+.floor-rates{display:flex;gap:6px;flex-wrap:wrap;padding:0 16px 12px;}
+.floor-badge{padding:4px 10px;background:var(--navy);border:1px solid var(--border);border-radius:4px;font-size:11px;color:var(--text3);}
+.floor-badge strong{color:var(--text2);font-family:'DM Mono',monospace;}
+.dashboard-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:24px;}
+.stat-card{background:var(--navy2);border:1px solid var(--border);border-radius:8px;padding:16px;}
+.stat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;}
+.stat-value{font-size:24px;font-family:'DM Serif Display',serif;color:var(--white);}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:4px;}
+.stat-card.teal .stat-value{color:var(--teal);}
+.stat-card.gold .stat-value{color:var(--gold);}
+.stat-card.green .stat-value{color:var(--green);}
+.section-hero{background:linear-gradient(135deg,var(--navy2),var(--navy3));border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;gap:16px;}
+.section-num{width:48px;height:48px;background:linear-gradient(135deg,var(--teal),rgba(0,194,203,0.5));border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:20px;color:var(--navy);font-weight:700;flex-shrink:0;}
+.section-info h2{font-family:'DM Serif Display',serif;font-size:20px;color:var(--white);}
+.section-info p{font-size:13px;color:var(--text2);margin-top:4px;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;align-items:center;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal{background:var(--navy2);border:1px solid var(--border);border-radius:12px;width:480px;max-width:95vw;max-height:85vh;overflow-y:auto;}
+.modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.modal-title{font-family:'DM Serif Display',serif;font-size:16px;}
+.modal-close{background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer;padding:4px 8px;border-radius:4px;}
+.modal-close:hover{background:var(--navy3);color:var(--text);}
+.modal-body{padding:20px;}
+.form-group{margin-bottom:16px;}
+.form-label{font-size:12px;color:var(--text3);margin-bottom:6px;display:block;}
+.form-input{width:100%;background:var(--navy3);border:1px solid var(--border);border-radius:6px;padding:10px 12px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;}
+.form-input:focus{outline:none;border-color:var(--teal);}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:var(--text3);}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:12px 16px;font-size:13px;z-index:300;transform:translateY(80px);transition:transform 0.3s;display:flex;align-items:center;gap:8px;}
+.toast.show{transform:translateY(0);}
+.toast.success{border-color:var(--green);}.toast.success .toast-icon{color:var(--green);}
+.toast.error{border-color:var(--red);}.toast.error .toast-icon{color:var(--red);}
+.empty-hint{text-align:center;padding:40px;color:var(--text3);}
+.empty-hint p{margin-top:8px;font-size:13px;}
+.rates-progress{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.progress-bar{flex:1;height:6px;background:var(--navy3);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:3px;transition:width 0.5s;}
+.hl{background:rgba(240,165,0,0.3);border-radius:2px;padding:0 1px;}
+/* ===== SIDEBAR TOGGLE & OVERLAY ===== */
+.sidebar-toggle{display:none;background:none;border:none;color:var(--text);font-size:22px;cursor:pointer;padding:4px 8px;line-height:1;margin-right:2px;flex-shrink:0;}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:98;transition:opacity 0.25s;}
+.sidebar-overlay.show{display:block;}
+
+@media(max-width:768px){
+  /* Show hamburger */
+  .sidebar-toggle{display:flex;align-items:center;}
+
+  /* Sidebar slides in from left as overlay */
+  aside{
+    transform:translateX(-110%);
+    transition:transform 0.25s ease;
+    z-index:99;
+    box-shadow:4px 0 24px rgba(0,0,0,0.5);
+  }
+  aside.open{transform:translateX(0);}
+
+  /* Main takes full width */
+  main{margin-left:0!important;padding:12px;}
+
+  /* Header: compress actions */
+  .header-actions{gap:6px;}
+  .header-actions .btn-ghost{display:none;}
+  .header-actions .btn-gold{padding:6px 10px;font-size:12px;}
+  .save-indicator{display:none;}
+
+  /* Dashboard grid: 2 cols */
+  .dashboard-grid{grid-template-columns:repeat(2,1fr);}
+
+  /* Section hero: stack */
+  .section-hero{flex-direction:column;text-align:center;}
+  .section-hero > div[style*="margin-left:auto"]{margin-left:0!important;width:100%;justify-content:center;}
+
+  /* Item header: wrap on mobile */
+  .item-header{flex-wrap:wrap;gap:8px;}
+  .item-header .btn{align-self:flex-start;}
+
+  /* Breakdown table: horizontal scroll */
+  .table-scroll-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .breakdown-table{min-width:520px;}
+
+  /* Basic prices table: horizontal scroll */
+  .prices-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .prices-table-wrap table{min-width:420px;}
+
+  /* Rate summary: wrap tightly */
+  .rate-summary{flex-wrap:wrap;gap:6px;}
+  .floor-rates{flex-wrap:wrap;gap:6px;}
+
+  /* Price tabs: scrollable row */
+  .price-tabs{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;}
+  .price-tab{white-space:nowrap;flex-shrink:0;}
+
+  /* Panel body padding */
+  .panel-body{padding:12px;}
+  .panel-header{padding:12px 14px;flex-wrap:wrap;gap:8px;}
+
+  /* Getting started cards: single col */
+  .panel-body > div[style*="grid-template-columns"]{grid-template-columns:1fr!important;}
+
+  /* Section overview grid: 2 col */
+  div[style*="minmax(200px"]{grid-template-columns:repeat(2,1fr)!important;}
+
+  /* Footer: stack */
+  div[style*="position:fixed;bottom:0"]{flex-direction:column;align-items:flex-start;padding:6px 12px;gap:3px;}
+}
+
+@media(max-width:480px){
+  .dashboard-grid{grid-template-columns:1fr 1fr;}
+  .logo-text{font-size:15px;}
+  main{padding:8px;}
+}
+.export-options{display:flex;gap:8px;flex-wrap:wrap;}
+.sub-section-label{font-size:12px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:1px;padding:12px 16px 6px;background:rgba(0,194,203,0.05);border-top:1px solid var(--border);}
+.manual-section{background:rgba(249,115,22,0.05);border-top:1px solid rgba(249,115,22,0.2);padding:8px 16px;}
+.manual-notice{font-size:11px;color:var(--orange);display:flex;align-items:center;gap:6px;}
+</style>
+</head>
+<body>
+
+<header>
+  <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle menu">☰</button>
+  <div class="logo">
+    <div class="logo-icon">BSR</div>
+    <div>
+      <div class="logo-text">Rate<span>Calc</span> Pro</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <span class="save-indicator" id="saveIndicator">✓ Saved</span>
+    <button class="btn btn-ghost" onclick="showImportModal()">⬆ Import Rates</button>
+    <button class="btn btn-gold" onclick="showExportModal()">⬇ Export</button>
+    <button class="btn btn-ghost" onclick="showProjectModal()">⚙ Project</button>
+  </div>
+</header>
+
+<div class="layout">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+  <aside id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Overview</div>
+      <div class="sidebar-item" data-section="dashboard" onclick="navigate('dashboard')"><span>🏠</span> Dashboard</div>
+      <div class="sidebar-item" data-section="basic-prices" onclick="navigate('basic-prices')"><span>💰</span> Basic Prices</div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Rate Breakdowns</div>
+      <div id="sectionNav"></div>
+    </div>
+  </aside>
+  <main id="mainContent"></main>
+</div>
+
+<div class="toast" id="toast"><span class="toast-icon"></span><span id="toastMsg"></span></div>
+
+<!-- ===== LEGAL DISCLAIMER MODAL (First Visit) ===== -->
+<div class="modal-overlay" id="disclaimerModal" style="display:flex;z-index:999;">
+  <div class="modal" style="max-width:540px;">
+    <div class="modal-header" style="background:rgba(0,194,203,0.08);border-bottom:1px solid rgba(0,194,203,0.3);">
+      <div>
+        <div class="modal-title" style="color:#00c2cb;">⚖️ Legal Notice &amp; Disclaimer</div>
+        <div style="font-size:11px;color:#5a8ab0;margin-top:3px;">Please read before using this tool</div>
+      </div>
+    </div>
+    <div class="modal-body" style="font-size:13px;color:#8ab3d6;line-height:1.7;">
+      <div style="background:rgba(0,194,203,0.06);border:1px solid rgba(0,194,203,0.2);border-radius:8px;padding:14px 16px;margin-bottom:14px;">
+        <div style="font-size:11px;font-weight:700;color:#00c2cb;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">📋 Data Attribution</div>
+        The BSR rate norms, item descriptions, material codes, labour codes, and analysis quantities used in this tool are sourced from the <strong style="color:#e8f4fd;">Building Schedule of Rates</strong> published by the <strong style="color:#e8f4fd;">Department of Buildings, Sri Lanka (ICTAD)</strong>. All intellectual property rights in that data remain with the respective authority.
+      </div>
+      <div style="background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.25);border-radius:8px;padding:14px 16px;margin-bottom:14px;">
+        <div style="font-size:11px;font-weight:700;color:#f97316;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">⚠️ Unofficial Tool</div>
+        This is an <strong style="color:#e8f4fd;">independent, unofficial</strong> digital calculation aid developed for Quantity Surveying professionals. It is <strong style="color:#e8f4fd;">NOT</strong> an official government application. Calculated rates are estimates only and are <strong style="color:#e8f4fd;">NOT legally binding</strong>. Always verify rates with the issuing authority before use in official documents or contracts.
+      </div>
+      <div style="background:rgba(0,0,0,0.2);border:1px solid rgba(30,61,99,0.8);border-radius:8px;padding:14px 16px;margin-bottom:16px;">
+        <div style="font-size:11px;font-weight:700;color:#5a8ab0;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">©️ Copyright</div>
+        App design, user interface, calculation engine, PDF/Excel export, and all original code © 2025 BSR RateCalc Pro. All rights reserved. The BSR norms data remain the property of the Department of Buildings, Sri Lanka.
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:10px;" onclick="acceptDisclaimer()">✓ I Understand — Continue to App</button>
+    </div>
+  </div>
+</div>
+<!-- ===== END LEGAL DISCLAIMER MODAL ===== -->
+
+<!-- Export Modal -->
+<div class="modal-overlay" id="exportModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Export Rate Breakdown</div>
+      <button class="modal-close" onclick="closeModal('exportModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Export Section</label>
+        <select class="form-input" id="exportSection"><option value="all">All Sections</option></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Format</label>
+        <div class="export-options">
+          <button class="btn btn-primary" onclick="exportExcel()">📊 Excel (.xlsx)</button>
+          <button class="btn btn-gold" onclick="exportPDF()">📄 PDF</button>
+          <button class="btn btn-ghost" onclick="exportCSV()">📋 CSV</button>
+        </div>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text3);">
+        Export includes all rate breakdowns with computed amounts and unit rates based on your entered prices.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Project Modal -->
+<div class="modal-overlay" id="projectModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Project Settings</div>
+      <button class="modal-close" onclick="closeModal('projectModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Project Name</label><input class="form-input" id="projName" placeholder="e.g. Residential Building - Colombo"></div>
+      <div class="form-group"><label class="form-label">Client Name</label><input class="form-input" id="projClient" placeholder="Client name"></div>
+      <div class="form-group"><label class="form-label">Prepared By (QS Name)</label><input class="form-input" id="projBy" placeholder="QS name"></div>
+      <div class="form-group"><label class="form-label">Project Date</label><input class="form-input" id="projDate" type="date"></div>
+      <div class="form-group"><label class="form-label">Currency / Unit</label><input class="form-input" id="projCurrency" placeholder="e.g. Rs." value="Rs."></div>
+      <div style="display:flex;gap:8px;margin-top:16px;">
+        <button class="btn btn-primary" onclick="saveProject()">Save Settings</button>
+        <button class="btn btn-danger" onclick="if(confirm('Reset ALL rates to zero?')){resetAllRates();}">Reset All Rates</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Import Modal -->
+<div class="modal-overlay" id="importModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Import Rates from CSV</div>
+      <button class="modal-close" onclick="closeModal('importModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">
+        Upload a CSV file with columns: <code style="color:var(--teal)">code,rate</code><br>
+        e.g. <code style="color:var(--teal)">M-026,850</code>
+      </p>
+      <input type="file" id="csvFile" accept=".csv" class="form-input" style="padding:8px;">
+      <button class="btn btn-primary" onclick="importCSV()" style="margin-top:12px;">Import</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+// ============================================================
+// DATA - BASIC RATES MASTER
+// ============================================================
+const MATERIALS = [
+  {code:"M-001",desc:"Acid",unit:"Gal"},{code:"M-002",desc:"Anti Corrosive Primer",unit:"litre"},{code:"M-003",desc:"Asbestos Corrugated Sheet",unit:"Sq.ft"},{code:"M-004",desc:"Barrel Bolt",unit:"No"},{code:"M-005",desc:"Binding Wire - 16 BWG",unit:"Lbs"},{code:"M-006",desc:"Bitumen",unit:"Gal"},{code:"M-007",desc:"Blasting Powder",unit:"Lbs"},{code:"M-008",desc:"Blue",unit:"Ozs"},{code:"M-009",desc:"Boiled Lime",unit:"Cwt"},{code:"M-010",desc:"Bolts 16mm 18\" long",unit:"No"},{code:"M-011",desc:"Brass Fanlight Catches",unit:"No"},{code:"M-012",desc:"Brass Nails - 1½\"",unit:"Lbs"},{code:"M-013",desc:"Brass Panel Pins",unit:"Doz"},{code:"M-014",desc:"Brass Screws - 1\"",unit:"No"},{code:"M-015",desc:"Brass Screws - 1½\"",unit:"No"},{code:"M-016",desc:"Brass Screws - ½\"",unit:"No"},{code:"M-017",desc:"Brass Screws - ¾\"",unit:"No"},{code:"M-018",desc:"Brass Screws - 4\" Long",unit:"No"},{code:"M-019",desc:"Bricks",unit:"No"},{code:"M-020",desc:"Brush - 3\"",unit:"No"},{code:"M-021",desc:"Brush - 6\"",unit:"No"},{code:"M-022",desc:"Brush - 2\"",unit:"No"},{code:"M-023",desc:"Butt Hinges",unit:"No"},{code:"M-024",desc:"Casement Fasteners",unit:"No"},{code:"M-025",desc:"Casement Stays",unit:"No"},{code:"M-026",desc:"Cement",unit:"Bag"},{code:"M-027",desc:"Clear Glass Panes",unit:"Sq.ft"},{code:"M-028",desc:"Clips and Nails - 1\"",unit:"No"},{code:"M-029",desc:"Clips and Nails - 1½\"",unit:"No"},{code:"M-030",desc:"Clips and Nails - 1¼\"",unit:"No"},{code:"M-031",desc:"Clips and Nails - 2\"",unit:"No"},{code:"M-032",desc:"Clips and Screws - 3\"",unit:"No"},{code:"M-033",desc:"Clout Nails - ¼\"",unit:"Lbs"},{code:"M-034",desc:"Coir Brush - 6\"",unit:"No"},{code:"M-035",desc:"Coloured Pigment",unit:"Lbs"},{code:"M-036",desc:"Colouring Powder",unit:"Lbs"},{code:"M-037",desc:"Cotton Waste",unit:"Lbs"},{code:"M-038",desc:"D.D.T. Powder",unit:"Lbs"},{code:"M-039",desc:"Diesel Fuel",unit:"Ltr"},{code:"M-040",desc:"Door Closer",unit:"No"},{code:"M-041",desc:"Draw Rings",unit:"No"},{code:"M-042",desc:"Earth Delivered at Site",unit:"Cube"},{code:"M-043",desc:"Emulsion Paint",unit:"litre"},{code:"M-044",desc:"Enamel Paint",unit:"litre"},{code:"M-045",desc:"Fibre / Plastic Plugs",unit:"No"},{code:"M-046",desc:"Fire Wood",unit:"Lbs"},{code:"M-047",desc:"Flannel Cloth",unit:"Yards"},{code:"M-048",desc:"Flat Asbestos Ceiling Sheets",unit:"Sq.ft"},{code:"M-049",desc:"Floor Brush",unit:"No"},{code:"M-050",desc:"Fuel Forge",unit:"Ltr"},{code:"M-051",desc:"Fuse Wire",unit:"L.ft"},{code:"M-052",desc:"Galvanised Iron Sheet (8'×4') 18 BWG",unit:"No"},{code:"M-053",desc:"Gravel Delivered to Site",unit:"Cube"},{code:"M-054",desc:"Gutter Brackets",unit:"No"},{code:"M-055",desc:"Gutter Joiner",unit:"No"},{code:"M-056",desc:"Half Round Clay Tiles",unit:"No"},{code:"M-057",desc:"Hollow Cement Block - 8\" thick (16\"×8\"×8\")",unit:"No"},{code:"M-058",desc:"Hollow Cement Block - 4\" thick (16\"×8\"×4\")",unit:"No"},{code:"M-059",desc:"Hollow Cement Block - 6\" thick (16\"×8\"×6\")",unit:"No"},{code:"M-060",desc:"Iron Nails - 1½\"",unit:"Kg"},{code:"M-061",desc:"Iron Screws - ¾\"",unit:"No"},{code:"M-062",desc:"Jumper Steel",unit:"Lbs"},{code:"M-063",desc:"Jute Hessian",unit:"Sq.ft"},{code:"M-064",desc:"Metal - 1\"",unit:"Cube"},{code:"M-065",desc:"Metal - 1½\"",unit:"Cube"},{code:"M-066",desc:"Metal - ¾\"",unit:"Cube"},{code:"M-067",desc:"Mild Steel Dowels - 5/8\", 4\" Long",unit:"No"},{code:"M-068",desc:"Mild Steel Rods incl. transport",unit:"Kg"},{code:"M-069",desc:"Mineral Turpentine or Thinner",unit:"litre"},{code:"M-070",desc:"Mortice Lock with Screws",unit:"No"},{code:"M-071",desc:"Mould Oil",unit:"litre"},{code:"M-072",desc:"Nails - 2\"",unit:"Lbs"},{code:"M-073",desc:"Nails - ¾\"",unit:"Lbs"},{code:"M-074",desc:"Plywood Sash - 6'9\" × 2'9\"",unit:"No"},{code:"M-075",desc:"Primer",unit:"litre"},{code:"M-076",desc:"PVC Elbows/Bent/Socket - ¾\"",unit:"No"},{code:"M-077",desc:"PVC Sockets - 1\"",unit:"No"},{code:"M-078",desc:"PVC Down Pipes - 12' length",unit:"No"},{code:"M-079",desc:"PVC Elbow for Rainwater Down Pipes",unit:"No"},{code:"M-080",desc:"PVC Elbows/Bent/Socket - 1½\"",unit:"No"},{code:"M-081",desc:"PVC Elbows/Bent/Socket - 1¼\"",unit:"No"},{code:"M-082",desc:"PVC Elbows/Bent/Socket - 1\"",unit:"No"},{code:"M-083",desc:"PVC Elbows/Bent/Socket - ½\"",unit:"No"},{code:"M-084",desc:"PVC Elbows/Bent/Socket - 2½\"",unit:"No"},{code:"M-085",desc:"PVC Elbows/Bent/Socket - 2\"",unit:"No"},{code:"M-086",desc:"PVC Elbows/Bent/Socket - 3\"",unit:"No"},{code:"M-087",desc:"PVC End Cap",unit:"No"},{code:"M-088",desc:"PVC Gutter - 12' length",unit:"No"},{code:"M-089",desc:"PVC Gutter Head - 6\"",unit:"No"},{code:"M-090",desc:"PVC Joiner - 3½\"",unit:"No"},{code:"M-091",desc:"PVC Mitre Bend 6\" dia",unit:"No"},{code:"M-092",desc:"PVC Pipes - 1½\"",unit:"L.ft"},{code:"M-093",desc:"PVC Pipes - 1¼\"",unit:"L.ft"},{code:"M-094",desc:"PVC Pipes - 1\"",unit:"L.ft"},{code:"M-095",desc:"PVC Pipes - ½\"",unit:"L.ft"},{code:"M-096",desc:"PVC Pipes - 2\"",unit:"L.ft"},{code:"M-097",desc:"PVC Pipes - 3\"",unit:"L.ft"},{code:"M-098",desc:"PVC Pipes - ¾\"",unit:"L.ft"},{code:"M-100",desc:"PVC Sockets - 1½\"",unit:"No"},{code:"M-101",desc:"PVC Sockets - 1¼\"",unit:"No"},{code:"M-102",desc:"PVC Sockets - 2\"",unit:"No"},{code:"M-103",desc:"PVC Sockets - 3\"",unit:"No"},{code:"M-105",desc:"Ridge Tiles (Calicut Pattern)",unit:"No"},{code:"M-106",desc:"Ridges 3'8\" Long - Asbestos",unit:"Pair"},{code:"M-108",desc:"Tiles (Calicut Clay)",unit:"No"},{code:"M-109",desc:"Roofing Screws and Washers",unit:"No"},{code:"M-110",desc:"Roofing Screws or Bolts",unit:"No"},{code:"M-111",desc:"Rubble - 6\"-9\"",unit:"Cube"},{code:"M-112",desc:"Salt",unit:"Lbs"},{code:"M-113",desc:"Sand",unit:"Cube"},{code:"M-114",desc:"Sand Paper",unit:"Sheet"},{code:"M-115",desc:"Slaked Lime",unit:"Lbs"},{code:"M-117",desc:"Solvent Cement",unit:"Grms"},{code:"M-118",desc:"Spur Stone",unit:"No"},{code:"M-119",desc:"Tarnap",unit:"Gal"},{code:"M-130",desc:"Pressed Tiles 8\" × 8\"",unit:"No"},{code:"M-132",desc:"Terrazzo Tiles 12\" × 12\"",unit:"No"},{code:"M-133",desc:"½\" × ½\" Beading",unit:"L.ft"},{code:"M-134",desc:"1½\" × ½\" Halmilla Beadings",unit:"L.ft"},{code:"M-135",desc:"6\" × ¾\" Lunumidella Ceiling Planks",unit:"Sq.ft"},{code:"M-136",desc:"Timber Class I",unit:"Cu.ft"},{code:"M-138",desc:"4\" × 3\" Timber Class I",unit:"Cu.ft"},{code:"M-139",desc:"1½\" Planks",unit:"Sq.ft"},{code:"M-139a",desc:"1\" Planks",unit:"Sq.ft"},{code:"M-140",desc:"Class II Timber",unit:"Cu.ft"},{code:"M-141",desc:"1\" Thick Class II Timber",unit:"Sq.ft"},{code:"M-142",desc:"2\" × 1\" Class II Timber Battens",unit:"L.ft"},{code:"M-143",desc:"2\" × 2\" Class II Timber",unit:"L.ft"},{code:"M-144",desc:"4\" × 2\" Timber Props/Bearers",unit:"L.ft"},{code:"M-145",desc:"2\" × 2\" Halmilla Cove Moulding",unit:"Sq.ft"},{code:"M-146",desc:"4\" × 2\" Timber Joists",unit:"L.ft"},{code:"M-147",desc:"1\" Planks (Roof)",unit:"Sq.ft"},{code:"M-149",desc:"2\" × 1\" Reepers",unit:"L.ft"},{code:"M-150",desc:"2\" × ¼\" Timber Strips",unit:"L.ft"},{code:"M-151",desc:"Timber Wedges",unit:"No"},{code:"M-152",desc:"M.S./Tor Steel Rods incl. transport",unit:"Kg"},{code:"M-154",desc:"Varnish (Copal)",unit:"litre"},{code:"M-155",desc:"Glazed Tiles 6\" × 6\"",unit:"No"},{code:"M-156",desc:"Glazed Tiles 8\" × 12\"",unit:"No"},{code:"M-157",desc:"Water",unit:"Gal"},{code:"M-158",desc:"Wax Polish",unit:"Lbs"},{code:"M-159",desc:"White Cement",unit:"Lbs"},{code:"M-160",desc:"Wire Brush",unit:"No"},{code:"M-161",desc:"Wire Nails",unit:"Lbs"},{code:"M-162",desc:"Wire Nails - 2\" Long",unit:"Lbs"},{code:"M-163",desc:"Wire Nails - 6\" Long",unit:"Lbs"},{code:"M-164",desc:"Wire Cut Bricks",unit:"No"},{code:"M-165",desc:"Wood Preservative",unit:"Gal"},{code:"M-166",desc:"Yellow Ochre",unit:"Lbs"},
+];
+const LABOUR = [
+  {code:"L-001",desc:"Painter",unit:"Day"},{code:"L-002",desc:"Plumber",unit:"Day"},{code:"L-003",desc:"Skilled Labour (SK)",unit:"Day"},{code:"L-004",desc:"Skilled Labour - Vibrator Operator",unit:"Day"},{code:"L-005",desc:"Tinker",unit:"Day"},{code:"L-006",desc:"Tiler",unit:"Day"},{code:"L-007",desc:"Unskilled Labour (U/SK)",unit:"Day"},{code:"L-008",desc:"Carpenter",unit:"Day"},{code:"L-009",desc:"Mason",unit:"Day"},{code:"L-010",desc:"Glazier",unit:"Day"},
+];
+const PLANT = [
+  {code:"P-001",desc:"Hire of Concrete Mixer",unit:"Day"},{code:"P-002",desc:"Hire of Vibrator",unit:"Day"},{code:"P-003",desc:"Vibrating Rammer (60 kg)",unit:"Day"},
+];
+
+// ============================================================
+// BSR RATE BREAKDOWN SECTIONS DATA
+// ============================================================
+const SECTIONS = [
+{id:"01",title:"Site Preparation & Excavation",items:[
+  {code:"01.A.01",desc:"Clearing site and grubbing up all small trees not exceeding 500mm girth, bushes, scrubs, undergrowth etc.",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:0.75},{no:"1.01",desc:"Allow 2.5% of Item 1 for Tools",type:"percent",pct:0.025,refs:["1"]}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}]},
+  {code:"01.A.02",desc:"Cutting turf sods, loading to handcarts and transporting up to 30 yards, laying and watering for 30 days",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"U/SK Labourer - cutting turf sods, loading & unloading",ref:"L-007",unit:"Day",qty:2.5},{no:"1.02",desc:"U/SK Labourer - laying turf sods",ref:"L-007",unit:"Day",qty:0.5},{no:"1.03",desc:"U/SK Labourer - watering",ref:"L-007",unit:"Day",qty:1.5},{no:"1.04",desc:"Water",ref:"M-157",unit:"Gal",qty:60}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}]},
+  {code:"01.A.03",desc:"Removing top soil to a depth not exceeding 6\" & depositing as directed within site",analysisQty:10,analysisUnit:"Sqrs",lines:[{no:"1",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:10},{no:"1.01",desc:"Allow 2.5% of Item 1 for Tools",type:"percent",pct:0.025,refs:["1"]}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}]},
+  {code:"01.B.01",desc:"Excavation over site to reduce level, in any material except rock requiring blasting, including depositing and levelling as directed up to 30' 0\"",analysisQty:1,analysisUnit:"Cube",lines:[{no:"1",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:1.625},{no:"1.02",desc:"Allow 2.5% of Item 1 for Tools",type:"percent",pct:0.025,refs:["1"]}],rates:[{label:"1 Cube",mult:1},{label:"1 ft³",mult:0.01},{label:"1 m³",mult:0.3532}]},
+  {code:"01.B.02",desc:"Excavation in trenches for walls/column pits in soft/loose soil from 0' to 5' deep, depositing not exceeding 30' 0\"",analysisQty:1,analysisUnit:"Cube",lines:[{no:"1",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:1.0},{no:"1.02",desc:"Allow 2.5% of Item 1 for Tools",type:"percent",pct:0.025,refs:["1"]}],rates:[{label:"1 Cube",mult:1},{label:"1 ft³",mult:0.01},{label:"1 m³",mult:0.3532}]},
+  {code:"01.B.03",desc:"Excavation in trenches for walls/column pits in ordinary soil from 0' to 5' deep, depositing not exceeding 30' 0\"",analysisQty:1,analysisUnit:"Cube",lines:[{no:"1",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2.25},{no:"1.02",desc:"Allow 2.5% of Item 1 for Tools",type:"percent",pct:0.025,refs:["1"]}],rates:[{label:"1 Cube",mult:1},{label:"1 ft³",mult:0.01},{label:"1 m³",mult:0.3532}]},
+  {code:"01.B.04",desc:"Excavation in trenches for walls/column pits in hard/dense soil up to depth of 5' 0\" depositing not exceeding 30' 0\"",analysisQty:1,analysisUnit:"Cube",lines:[{no:"1",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:3.5},{no:"1.02",desc:"Allow 2.5% of Item 1 for Tools",type:"percent",pct:0.025,refs:["1"]}],rates:[{label:"1 Cube",mult:1},{label:"1 ft³",mult:0.01},{label:"1 m³",mult:0.3532}]},
+  {code:"01.B.05",desc:"Excavation in trenches for walls/column pits in mud/wet soil up to depth of 5' 0\" depositing not exceeding 30' 0\"",analysisQty:1,analysisUnit:"Cube",lines:[{no:"1",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:3.0},{no:"1.02",desc:"Allow 2.5% of Item 1 for Tools",type:"percent",pct:0.025,refs:["1"]}],rates:[{label:"1 Cube",mult:1},{label:"1 ft³",mult:0.01},{label:"1 m³",mult:0.3532}]},
+  {code:"01.B.06",desc:"Excavation in trenches for walls/column pits in soft disintegrated rock (not requiring blasting) up to depth of 5' 0\"",analysisQty:1,analysisUnit:"Cube",lines:[{no:"1",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2.5},{no:"1.02",desc:"Allow 2.5% of Item 1 for Tools",type:"percent",pct:0.025,refs:["1"]}],rates:[{label:"1 Cube",mult:1},{label:"1 ft³",mult:0.01},{label:"1 m³",mult:0.3532}]},
+  {code:"01.B.07",desc:"Excavation in trenches for walls/column pits in Hard Rock requiring Blasting up to depth of 5' 0\"",analysisQty:1,analysisUnit:"Cube",lines:[{no:"1",desc:"Blasting Powder",ref:"M-007",unit:"Lbs",qty:0.75},{no:"1.01",desc:"Fuse Wire",ref:"M-051",unit:"L.ft",qty:10},{no:"1.02",desc:"Jumper Steel",ref:"M-062",unit:"Lbs",qty:1.0},{no:"1.03",desc:"Allow 20% of Items 1,1.01,1.02 for Steel Fuel & Forge",type:"percent",pct:0.20,refs:["1","1.01","1.02"]},{no:"1.04",desc:"Skilled Labour (SK)",ref:"L-003",unit:"Day",qty:1.0},{no:"1.05",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2.0}],rates:[{label:"1 Cube",mult:1},{label:"1 ft³",mult:0.01},{label:"1 m³",mult:0.3532}]},
+  {code:"01.B.08",desc:"Benching rock in foundation in 3\"-6\" steps (Blasting Prohibited)",analysisQty:10,analysisUnit:"Sq.ft",lines:[{no:"1",desc:"Skilled Labour (SK)",ref:"L-003",unit:"Day",qty:1.5},{no:"1.01",desc:"Allow 25% of Item 1 for Steel, Fuel & Forge",type:"percent",pct:0.25,refs:["1"]},{no:"1.02",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:0.5}],rates:[{label:"1 Sq.ft",mult:1},{label:"1 m²",mult:10.764}]},
+  {code:"01.B.09",desc:"Rock Requiring Blasting",analysisQty:1,analysisUnit:"Cube",lines:[{no:"1.01",desc:"Skilled Labour",ref:"L-003",unit:"Day",qty:3.0},{no:"1.03",desc:"Allow 2.5% of Items for Tools",type:"percent",pct:0.025,refs:["1.01"]},{no:"1.04",desc:"Fuel Forge etc.",ref:"M-050",unit:"Ltr",qty:0.25},{no:"1.05",desc:"Blasting Powder",ref:"M-007",unit:"Lbs",qty:0.68},{no:"1.06",desc:"Fuse Wire",ref:"M-051",unit:"L.ft",qty:3.05},{no:"1.07",desc:"Steel Jumper",ref:"M-062",unit:"Lbs",qty:0.45}],rates:[{label:"1 Cube",mult:1},{label:"1 ft³",mult:0.01},{label:"1 m³",mult:0.3532}]},
+]},
+{id:"02",title:"Filling & Earth Work Support",items:[
+  {code:"02.A.01",desc:"Backfilling to trenches with selected earth available at site",analysisQty:1,analysisUnit:"Cube",lines:[{no:"1",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:1.0},{no:"1.02",desc:"Allow 2.5% of Item 1 for Tools",type:"percent",pct:0.025,refs:["1"]}],rates:[{label:"1 Cube",mult:1},{label:"1 ft³",mult:0.01},{label:"1 m³",mult:0.3532}]},
+  {code:"02.A.02",desc:"Backfilling to trenches with Imported Material",analysisQty:1,analysisUnit:"Cube",lines:[{no:"1",desc:"Earth Delivered at Site",ref:"M-042",unit:"Cube",qty:1.0},{no:"1.01",desc:"Allow 15% of Item 1 for Compacting",type:"percent",pct:0.15,refs:["1"]},{no:"1.02",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:1.25}],rates:[{label:"1 Cube",mult:1},{label:"1 ft³",mult:0.01},{label:"1 m³",mult:0.3532}]},
+  {code:"02.A.03",desc:"Filling under floors incl. levelling, watering & compacting in 3\" layers with available selected earth at site",analysisQty:1,analysisUnit:"Cube",lines:[{no:"1.02",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2.0},{no:"1.02b",desc:"Allow 2.5% of Item 1 for Tools",type:"percent",pct:0.025,refs:["1.02"]}],rates:[{label:"1 Cube",mult:1},{label:"1 ft³",mult:0.01},{label:"1 m³",mult:0.3532}]},
+  {code:"02.A.04",desc:"Filling under floors incl. levelling, watering & compacting in 3\" layers with imported selected earth",analysisQty:1,analysisUnit:"Cube",lines:[{no:"1.02",desc:"Earth Delivered at Site",ref:"M-042",unit:"Cu",qty:1.0},{no:"1.03",desc:"Allow 15% of Item 1.02 for Compaction",type:"percent",pct:0.15,refs:["1.02"]},{no:"1.04",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2.0},{no:"1.02b",desc:"Allow 2.5% of Item 1 for Tools",type:"percent",pct:0.025,refs:["1.02"]}],rates:[{label:"1 Cube",mult:1},{label:"1 ft³",mult:0.01},{label:"1 m³",mult:0.3532}]},
+  {code:"02.A.05",desc:"Filling under floors incl. levelling, watering & compacting in 3\" layers with imported gravel",analysisQty:1,analysisUnit:"Cube",lines:[{no:"1.02",desc:"Gravel Delivered at Site",ref:"M-053",unit:"Cube",qty:1.0},{no:"1.03",desc:"Allow 15% of Item 1.02 for Compaction & Wastage",type:"percent",pct:0.15,refs:["1.02"]},{no:"1.04",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2.0},{no:"1.02b",desc:"Allow 2.5% of Item 1 for Tools",type:"percent",pct:0.025,refs:["1.02"]}],rates:[{label:"1 Cube",mult:1},{label:"1 ft³",mult:0.01},{label:"1 m³",mult:0.3532}]},
+  {code:"02.A.06",desc:"Approved soil spread & compacted in 150-225mm thick layers using Machine Rammer at narrow places (Loose Volume)",analysisQty:7,analysisUnit:"Cu.m",lines:[{no:"1.01",desc:"Labour Unskilled (U/SK)",ref:"L-007",unit:"Day",qty:1.0},{no:"1.02",desc:"Allow 2.5% of Item 1.01 for Tools",type:"percent",pct:0.025,refs:["1.01"]},{no:"1.04",desc:"Vibrating Rammer 60kg",ref:"P-003",unit:"Day",qty:0.5}],rates:[{label:"1 m³",mult:1},{label:"1 Cube",mult:2.832},{label:"1 ft³",mult:0.02832}]},
+  {code:"02.B.01",desc:"Earth Work Support (Open Planking) in trenches up to a depth of 5' 0\"",analysisQty:1.5,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Class II Timber (17.5 ft³ for 4 uses)",ref:"M-140",unit:"Cu.ft",qty:4.375},{no:"1.02",desc:"Carpenter",ref:"L-008",unit:"Day",qty:1.0},{no:"1.03",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:3.0}],rates:[{label:"1 Sqr",mult:1},{label:"1 m²",mult:0.1076}]},
+  {code:"02.B.02",desc:"Earth Work Support (Close Planking) in trenches up to a depth of 5' 0\"",analysisQty:1.5,analysisUnit:"Sqrs",lines:[{no:"1.01",desc:"Class II Timber (30 ft³ for 4 uses)",ref:"M-140",unit:"Cu.ft",qty:7.5},{no:"1.02",desc:"Carpenter",ref:"L-008",unit:"Day",qty:1.0},{no:"1.03",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:3.0}],rates:[{label:"1 Sqr",mult:1},{label:"1 m²",mult:0.1076}]},
+]},
+{id:"03",title:"Anti Termite Treatment & DPC",items:[
+  {code:"03.A.01",desc:"Anti-Termite treatment on excavated foundation and compacted soil under floors",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1",desc:"D.D.T. Powder",ref:"M-038",unit:"Lbs",qty:16},{no:"1.01",desc:"Water",ref:"M-157",unit:"Gal",qty:20},{no:"1.02",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:0.5}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}]},
+  {code:"03.B.01",desc:"¾\" thick DPC in cement sand 1:2 finished with 2 coats hot tar and blinded with sand",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Cement",ref:"M-026",unit:"Bag",qty:2.25},{no:"1.02",desc:"Sand",ref:"M-113",unit:"Cube",qty:0.11},{no:"1.03",desc:"Bitumen",ref:"M-006",unit:"Gal",qty:1.5},{no:"1.04",desc:"Fire Wood",ref:"M-046",unit:"Lbs",qty:10},{no:"1.05",desc:"Water",ref:"M-157",unit:"Gal",qty:10},{no:"1.06",desc:"Mason",ref:"L-009",unit:"Day",qty:1.25},{no:"1.07",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2.5}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}]},
+]},
+{id:"04",title:"Random Rubble Masonry Work",items:[
+  {code:"04.01",desc:"Random Rubble Masonry in cement mortar 1:5 in foundation",analysisQty:1,analysisUnit:"Cube",lines:[{no:"1.01",desc:"6\"-9\" Rubble",ref:"M-111",unit:"Cube",qty:1.3},{no:"1.02",desc:"Cement",ref:"M-026",unit:"Bag",qty:5},{no:"1.03",desc:"Sand",ref:"M-113",unit:"Cube",qty:0.3},{no:"1.04",desc:"Water",ref:"M-157",unit:"Gal",qty:100},{no:"1.05",desc:"Mason",ref:"L-009",unit:"Day",qty:4},{no:"1.06",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:6}],rates:[{label:"1 Cube",mult:1},{label:"1 ft³",mult:0.01},{label:"1 m³",mult:0.3532}]},
+  {code:"04.02",desc:"Random Rubble Masonry in cement mortar 1:5 in Superstructure",analysisQty:1,analysisUnit:"Cube",lines:[{no:"1.01",desc:"6\"-9\" Rubble",ref:"M-111",unit:"Cube",qty:1.3},{no:"1.02",desc:"Cement",ref:"M-026",unit:"Bag",qty:5},{no:"1.03",desc:"Sand",ref:"M-113",unit:"Cube",qty:0.3},{no:"1.04",desc:"Water",ref:"M-157",unit:"Gal",qty:100},{no:"1.05",desc:"Mason",ref:"L-009",unit:"Day",qty:4.5},{no:"1.06",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:7},{no:"1.07",desc:"Allow 3% of Items 1.05, 1.06 for Scaffolding",type:"percent",pct:0.03,refs:["1.05","1.06"]}],rates:[{label:"1 Cube",mult:1},{label:"1 ft³",mult:0.01},{label:"1 m³",mult:0.3532}]},
+]},
+{id:"05",title:"Concrete Work",items:[
+  {code:"05.A.01",desc:"Mixing Concrete 1:1½:3 (¾\")",analysisQty:1,analysisUnit:"Cube",lines:[{no:"1.01",desc:"Cement",ref:"M-026",unit:"Bag",qty:23},{no:"1.02",desc:"Sand",ref:"M-113",unit:"Cube",qty:0.42},{no:"1.03",desc:"¾\" Metal",ref:"M-066",unit:"Cube",qty:0.82},{no:"1.04",desc:"Hire of Mixer",ref:"P-001",unit:"Day",qty:0.333},{no:"1.05",desc:"Water",ref:"M-157",unit:"Gal",qty:150},{no:"1.06",desc:"Skilled Labour (SK)",ref:"L-003",unit:"Day",qty:0.333},{no:"1.07",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2}],rates:[{label:"1 Cube",mult:1},{label:"1 m³",mult:0.3532}]},
+  {code:"05.A.02",desc:"Mixing Concrete 1:3:6 (1½\")",analysisQty:1,analysisUnit:"Cube",lines:[{no:"1.01",desc:"Cement",ref:"M-026",unit:"Bag",qty:13},{no:"1.02",desc:"Sand",ref:"M-113",unit:"Cube",qty:0.53},{no:"1.03",desc:"1½\" Metal",ref:"M-065",unit:"Cube",qty:0.92},{no:"1.04",desc:"Hire of Mixer",ref:"P-001",unit:"Day",qty:0.333},{no:"1.05",desc:"Water",ref:"M-157",unit:"Gal",qty:110},{no:"1.06",desc:"Skilled Labour (SK)",ref:"L-003",unit:"Day",qty:0.333},{no:"1.07",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2}],rates:[{label:"1 Cube",mult:1},{label:"1 m³",mult:0.3532}]},
+  {code:"05.A.03",desc:"Mixing Concrete 1:2½:5 (1\")",analysisQty:1,analysisUnit:"Cube",lines:[{no:"1.01",desc:"Cement",ref:"M-026",unit:"Bag",qty:14},{no:"1.02",desc:"Sand",ref:"M-113",unit:"Cube",qty:0.6},{no:"1.03",desc:"1\" Metal",ref:"M-064",unit:"Cube",qty:0.9},{no:"1.04",desc:"Hire of Mixer",ref:"P-001",unit:"Day",qty:0.333},{no:"1.05",desc:"Water",ref:"M-157",unit:"Gal",qty:100},{no:"1.06",desc:"Skilled Labour (SK)",ref:"L-003",unit:"Day",qty:0.333},{no:"1.07",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2}],rates:[{label:"1 Cube",mult:1},{label:"1 m³",mult:0.3532}]},
+  {code:"05.A.04",desc:"Mixing Concrete 1:2:4 (¾\")",analysisQty:1,analysisUnit:"Cube",lines:[{no:"1.01",desc:"Cement",ref:"M-026",unit:"Bag",qty:18},{no:"1.02",desc:"Sand",ref:"M-113",unit:"Cube",qty:0.5},{no:"1.03",desc:"¾\" Metal",ref:"M-066",unit:"Cube",qty:0.88},{no:"1.04",desc:"Hire of Mixer",ref:"P-001",unit:"Day",qty:0.333},{no:"1.05",desc:"Water",ref:"M-157",unit:"Gal",qty:120},{no:"1.06",desc:"Skilled Labour (SK)",ref:"L-003",unit:"Day",qty:0.333},{no:"1.07",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2}],rates:[{label:"1 Cube",mult:1},{label:"1 m³",mult:0.3532}]},
+  {code:"05.A.05",desc:"Mixing Concrete 1:1:2 (¾\")",analysisQty:1,analysisUnit:"Cube",lines:[{no:"1.01",desc:"Cement",ref:"M-026",unit:"Bag",qty:31},{no:"1.02",desc:"Sand",ref:"M-113",unit:"Cube",qty:0.44},{no:"1.03",desc:"¾\" Metal",ref:"M-066",unit:"Cube",qty:0.96},{no:"1.04",desc:"Hire of Mixer",ref:"P-001",unit:"Day",qty:0.333},{no:"1.05",desc:"Water",ref:"M-157",unit:"Gal",qty:200},{no:"1.06",desc:"Skilled Labour (SK)",ref:"L-003",unit:"Day",qty:0.333},{no:"1.07",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2}],rates:[{label:"1 Cube",mult:1},{label:"1 m³",mult:0.3532}]},
+  {code:"05.B.01",desc:"2\" Thick Cement Concrete screed 1:3:6 (1½\") in foundation at depth not exceeding 5' 0\"",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Mixing Concrete 1:3:6 (1½\") [ref 05.A.02]",ref:"05.A.02",unit:"Cube",qty:0.1667,isSubRef:true},{no:"1.02",desc:"Skilled Labour (SK)",ref:"L-003",unit:"Day",qty:0.125},{no:"1.03",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:0.5}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}]},
+  {code:"05.B.02",desc:"3\" Thick Cement Concrete 1:3:6 (1½\") screed in foundation at depths not exceeding 5' 0\"",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Mixing Concrete 1:3:6 (1½\") [ref 05.A.02]",ref:"05.A.02",unit:"Cube",qty:0.25,isSubRef:true},{no:"1.02",desc:"Skilled Labour (SK)",ref:"L-003",unit:"Day",qty:0.125},{no:"1.03",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:0.75}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}]},
+  {code:"05.C.01",desc:"6\" Thick cement concrete 1:2½:5 (1\") in floor (Mass concrete)",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Mixing Concrete 1:2½:5 (1\") [ref 05.A.03]",ref:"05.A.03",unit:"Cube",qty:0.5,isSubRef:true},{no:"1.025",desc:"Water",ref:"M-157",unit:"Gal",qty:200},{no:"1.03",desc:"Skilled Labour (SK)",ref:"L-003",unit:"Day",qty:0.5},{no:"1.04",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:1.25}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}]},
+  {code:"05.D.01",desc:"Cement concrete 1:1½:3 (¾\") in 13½\" × 13½\" columns in ground floor",analysisQty:0.51,analysisUnit:"Cube",lines:[{no:"1.01",desc:"Mixed Concrete 1:1½:3 (¾\") [ref 05.A.01]",ref:"05.A.01",unit:"Cube",qty:0.51,isSubRef:true},{no:"1.02",desc:"Allow 5% of Item 1.01 for Wastage",type:"percent",pct:0.05,refs:["1.01"]},{no:"1.025",desc:"Hire of Vibrator",ref:"P-002",unit:"Day",qty:0.5},{no:"1.03",desc:"Mason",ref:"L-009",unit:"Day",qty:0.5},{no:"1.04",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:1.5},{no:"1.05",desc:"SK Labourer (Vibrator)",ref:"L-004",unit:"Day",qty:0.5},{no:"1.06",desc:"Jute Hessian",ref:"M-063",unit:"Sq.ft",qty:45},{no:"1.07",desc:"Water",ref:"M-157",unit:"Gal",qty:100},{no:"1.08",desc:"U/SK Labourer (curing)",ref:"L-007",unit:"Day",qty:0.5}],rates:[{label:"1 Cube",mult:1},{label:"1 m³",mult:0.3532}],floors:true},
+  {code:"05.D.04",desc:"Cement concrete 1:2:4 (¾\") in 9\" × 9\" columns in ground floor",analysisQty:0.45,analysisUnit:"Cube",lines:[{no:"1.01",desc:"Mixed Concrete 1:2:4 (¾\") [ref 05.A.04]",ref:"05.A.04",unit:"Cu",qty:0.45,isSubRef:true},{no:"1.02",desc:"Allow 5% of Item 1.01 for Wastage",type:"percent",pct:0.05,refs:["1.01"]},{no:"1.025",desc:"Hire of Vibrator",ref:"P-002",unit:"Day",qty:1},{no:"1.03",desc:"Mason",ref:"L-009",unit:"Day",qty:1},{no:"1.04",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:3},{no:"1.05",desc:"SK Labourer (Vibrator)",ref:"L-004",unit:"Day",qty:1},{no:"1.06",desc:"Jute Hessian",ref:"M-063",unit:"Sq.ft",qty:60},{no:"1.07",desc:"Water",ref:"M-157",unit:"Gal",qty:100},{no:"1.08",desc:"U/SK Labourer (curing)",ref:"L-007",unit:"Day",qty:0.5}],rates:[{label:"1 Cube",mult:1},{label:"1 m³",mult:0.3532}],floors:true},
+  {code:"05.E.01",desc:"Cement concrete 1:2:4 (¾\") in 6\" × 6\" Beams up to 1st floor level",analysisQty:0.45,analysisUnit:"Cube",lines:[{no:"1.01",desc:"Mixing Concrete 1:2:4 (¾\") [ref 05.A.04]",ref:"05.A.04",unit:"Cu",qty:0.45,isSubRef:true},{no:"1.02",desc:"Allow 5% of Item 1.01 for Wastage",type:"percent",pct:0.05,refs:["1.01"]},{no:"1.025",desc:"Hire of Vibrator",ref:"P-002",unit:"Day",qty:1},{no:"1.03",desc:"Mason",ref:"L-009",unit:"Day",qty:1},{no:"1.04",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:4},{no:"1.05",desc:"SK Labourer (Vibrator)",ref:"L-004",unit:"Day",qty:1},{no:"1.06",desc:"Jute Hessian",ref:"M-063",unit:"Sq.ft",qty:90},{no:"1.07",desc:"Water",ref:"M-157",unit:"Gal",qty:180},{no:"1.08",desc:"U/SK Labourer (curing)",ref:"L-007",unit:"Day",qty:0.5}],rates:[{label:"1 Cube",mult:1},{label:"1 m³",mult:0.3532}],floors:true},
+  {code:"05.F.01",desc:"5\" Thick R.C.C 1:2:4 (¾\") floor slab in 1st floor",analysisQty:0.5,analysisUnit:"Cubes",lines:[{no:"1.01",desc:"Mixing Concrete 1:2:4 (¾\") [ref 05.A.04]",ref:"05.A.04",unit:"Cu",qty:0.5,isSubRef:true},{no:"1.02",desc:"Allow 5% of Item 1.01 for Wastage",type:"percent",pct:0.05,refs:["1.01"]},{no:"1.025",desc:"Hire of Vibrator",ref:"P-002",unit:"Day",qty:0.5},{no:"1.03",desc:"Mason",ref:"L-009",unit:"Day",qty:0.5},{no:"1.04",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2},{no:"1.05",desc:"SK Labourer (Vibrator)",ref:"L-004",unit:"Day",qty:0.5},{no:"1.06",desc:"Jute Hessian",ref:"M-063",unit:"Sq.ft",qty:30},{no:"1.07",desc:"Water",ref:"M-157",unit:"Gal",qty:90},{no:"1.08",desc:"U/SK Labourer (curing)",ref:"L-007",unit:"Day",qty:0.5}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}],floors:true},
+  {code:"05.G.01",desc:"Cement concrete 1:2:4 (¾\") in 4½\" × 6\" lintels in ground floor",analysisQty:240,analysisUnit:"L.ft",lines:[{no:"1.01",desc:"Mixing Concrete 1:2:4 (¾\") [ref 05.A.04]",ref:"05.A.04",unit:"Cu",qty:0.45,isSubRef:true},{no:"1.025",desc:"Hire of Vibrator",ref:"P-002",unit:"Day",qty:1},{no:"1.03",desc:"Mason",ref:"L-009",unit:"Day",qty:1},{no:"1.04",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:4},{no:"1.05",desc:"SK Labourer (Vibrator)",ref:"L-004",unit:"Day",qty:1},{no:"1.06",desc:"Jute Hessian",ref:"M-063",unit:"Sq.ft",qty:105},{no:"1.07",desc:"Water",ref:"M-157",unit:"Gal",qty:90},{no:"1.08",desc:"U/SK Labourer (curing)",ref:"L-007",unit:"Day",qty:0.5}],rates:[{label:"1 L.ft",mult:1},{label:"1 m",mult:3.281}],floors:true},
+]},
+{id:"06",title:"Formwork",items:[
+  {code:"06.A.01",desc:"Sawn timber formwork to 9\" × 9\" cement concrete column in ground floor",analysisQty:0.15,analysisUnit:"Sq",lines:[{no:"1.01",desc:"Column Formwork - Making Mould [ref 06.A.02]",ref:"06.A.02",unit:"1 Use",qty:1,isSubRef:true},{no:"1.02",desc:"Bolts 16mm 18\" (12 nos / 20 uses)",ref:"M-010",unit:"No",qty:0.6},{no:"1.03",desc:"Mould Oil",ref:"M-071",unit:"litre",qty:0.5},{no:"1.04",desc:"Timber Props 4\" × 2\"",ref:"M-144",unit:"L.ft",qty:3.5},{no:"1.05",desc:"Carpenter - assembling",ref:"L-008",unit:"Day",qty:0.25},{no:"1.06",desc:"U/SK Labourer - assembling",ref:"L-007",unit:"Day",qty:0.25},{no:"1.07",desc:"Carpenter - dismantling, cleaning & repairing",ref:"L-008",unit:"Day",qty:0.25},{no:"1.08",desc:"U/SK Labourer - dismantling, cleaning & repairing",ref:"L-007",unit:"Day",qty:0.25}],rates:[{label:"1 Sq",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}],floors:true},
+  {code:"06.A.02",desc:"Sawn timber formwork to 9\" × 9\" cement concrete column - Making Mould (for 4 uses)",analysisQty:4,analysisUnit:"Uses",lines:[{no:"1.01",desc:"1\" Thick Class II Timber",ref:"M-141",unit:"Sq.ft",qty:18.15},{no:"1.02",desc:"2\" × 2\" Class II Timber in Yokes",ref:"M-143",unit:"L.ft",qty:17.1},{no:"1.03",desc:"2\" × 1\" Class II Timber Battens",ref:"M-142",unit:"L.ft",qty:16.12},{no:"1.04",desc:"Wire Nails",ref:"M-161",unit:"Lbs",qty:1.5},{no:"1.05",desc:"Carpenter",ref:"L-008",unit:"Day",qty:0.5},{no:"1.06",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:0.5}],rates:[{label:"1 Use",mult:1}]},
+  {code:"06.B.01",desc:"Sawn timber formwork for concrete beams in ground floor",analysisQty:0.55,analysisUnit:"Sq",lines:[{no:"1.01",desc:"Beam Formwork - Making Mould [ref 06.B.02]",ref:"06.B.02",unit:"1 Use",qty:1,isSubRef:true},{no:"1.02",desc:"Beam Formwork - Assembling Materials [ref 06.B.03]",ref:"06.B.03",unit:"1 Use",qty:1,isSubRef:true},{no:"1.03",desc:"Allow 10% of Item 1.02 for Repairs",type:"percent",pct:0.10,refs:["1.02"]},{no:"1.04",desc:"Carpenter - Assembling",ref:"L-008",unit:"Day",qty:1},{no:"1.05",desc:"U/SK Labourer - Assembling",ref:"L-007",unit:"Day",qty:2},{no:"1.06",desc:"Mould Oil",ref:"M-071",unit:"litre",qty:0.5},{no:"1.07",desc:"Wire Nails",ref:"M-161",unit:"Lbs",qty:0.5},{no:"1.08",desc:"Carpenter - dismantling, cleaning & repairing",ref:"L-008",unit:"Day",qty:0.5},{no:"1.09",desc:"U/SK Labourer - dismantling, cleaning & repairing",ref:"L-007",unit:"Day",qty:2}],rates:[{label:"1 Sq",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}],floors:true},
+  {code:"06.B.02",desc:"Sawn timber formwork for 9\" × 12\" concrete beams - Making the Mould (4 uses)",analysisQty:4,analysisUnit:"Uses",lines:[{no:"1.01",desc:"1\" Thick Class II Timber",ref:"M-141",unit:"Sq.ft",qty:60},{no:"1.02",desc:"2\" × 1\" Class II Timber Battens",ref:"M-142",unit:"L.ft",qty:24},{no:"1.03",desc:"2\" × 2\" Class II Timber in Yokes",ref:"M-143",unit:"L.ft",qty:45},{no:"1.04",desc:"4\" × 2\" Timber Bearers",ref:"M-144",unit:"L.ft",qty:30},{no:"1.05",desc:"Wire Nails",ref:"M-161",unit:"Lbs",qty:2},{no:"1.06",desc:"Carpenter",ref:"L-008",unit:"Day",qty:1.5},{no:"1.07",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2}],rates:[{label:"1 Use",mult:1}]},
+]},
+{id:"07",title:"Reinforcement",items:[
+  {code:"07.01",desc:"Tor steel reinforcement to lintels, slabs, beams or columns, bent to shape, laid in position and tied with G.I. Wire",analysisQty:1,analysisUnit:"Cwt.",lines:[{no:"1.01",desc:"M.S./Tor Steel Rods incl. transport to site",ref:"M-152",unit:"Kg",qty:50},{no:"1.02",desc:"Allow 15% of Item 1.01 for Wastage",type:"percent",pct:0.15,refs:["1.01"]},{no:"1.03",desc:"16 BWG Binding Wire",ref:"M-005",unit:"Lbs",qty:1.5},{no:"1.04",desc:"Allow 1.5% of Item 1.01 for Spacers/Chairs",type:"percent",pct:0.015,refs:["1.01"]},{no:"1.05",desc:"Skilled Labour (SK)",ref:"L-003",unit:"Day",qty:1},{no:"1.06",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:1}],rates:[{label:"1 Cwt",mult:1},{label:"1 Kg",mult:0.0197}]},
+  {code:"07.02",desc:"Mild Steel reinforcement to lintels, slabs, beams or columns, bent to shape, laid in position and tied with G.I. Wire",analysisQty:1,analysisUnit:"Cwt.",lines:[{no:"1.01",desc:"M.S./Tor Steel Rods incl. transport to site",ref:"M-068",unit:"Kg",qty:50},{no:"1.02",desc:"Allow 15% of Item 1.01 for Wastage",type:"percent",pct:0.15,refs:["1.01"]},{no:"1.03",desc:"16 BWG Binding Wire",ref:"M-005",unit:"Lbs",qty:1.5},{no:"1.04",desc:"Skilled Labour (SK)",ref:"L-003",unit:"Day",qty:1},{no:"1.05",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:1}],rates:[{label:"1 Cwt",mult:1},{label:"1 Kg",mult:0.0197}]},
+]},
+{id:"08",title:"Block Work",items:[
+  {code:"08.01",desc:"8\" Thick hollow block work in cement and sand mortar 1:5 in ground floor (Cavities unfilled)",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Hollow Cement Block (16\"×8\"×8\")",ref:"M-057",unit:"No",qty:112},{no:"1.02",desc:"Allow 5% of Item 1.01 for Wastage",type:"percent",pct:0.05,refs:["1.01"]},{no:"1.03",desc:"Cement",ref:"M-026",unit:"Bag",qty:0.75},{no:"1.04",desc:"Sand",ref:"M-113",unit:"Cube",qty:0.06},{no:"1.05",desc:"Mason",ref:"L-009",unit:"Day",qty:1.5},{no:"1.06",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2.5},{no:"1.07",desc:"Allow 3% of Items 1.05, 1.06 for Scaffolding",type:"percent",pct:0.03,refs:["1.05","1.06"]}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}],floors:true},
+  {code:"08.02",desc:"6\" Thick hollow block work in cement and sand mortar 1:5 with cavities unfilled",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Hollow Cement Blocks (16\"×8\"×6\")",ref:"M-059",unit:"No",qty:112},{no:"1.02",desc:"Allow 5% of Item 1.01 for Wastage",type:"percent",pct:0.05,refs:["1.01"]},{no:"1.03",desc:"Cement",ref:"M-026",unit:"Bag",qty:0.65},{no:"1.04",desc:"Sand",ref:"M-113",unit:"Cube",qty:0.07},{no:"1.05",desc:"Mason",ref:"L-009",unit:"Day",qty:1.5},{no:"1.06",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2},{no:"1.07",desc:"Allow 3% of Items 1.05, 1.06 for Scaffolding",type:"percent",pct:0.03,refs:["1.05","1.06"]}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}],floors:true},
+  {code:"08.03",desc:"4\" Thick hollow block work in cement and sand mortar 1:5 with cavities unfilled",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Hollow Cement Blocks (16\"×8\"×4\")",ref:"M-058",unit:"No",qty:112},{no:"1.02",desc:"Allow 5% of Item 1.01 for Wastage",type:"percent",pct:0.05,refs:["1.01"]},{no:"1.03",desc:"Cement",ref:"M-026",unit:"Bag",qty:0.4},{no:"1.04",desc:"Sand",ref:"M-113",unit:"Cube",qty:0.03},{no:"1.05",desc:"Mason",ref:"L-009",unit:"Day",qty:1},{no:"1.06",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2},{no:"1.07",desc:"Allow 5% of Items 1.05, 1.06 for Scaffolding",type:"percent",pct:0.05,refs:["1.05","1.06"]}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}],floors:true},
+]},
+{id:"09",title:"Brick Work",items:[
+  {code:"09.01",desc:"Brick Work in cement sand 1:5 in 4½\" thick walls in ground floor",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Bricks",ref:"M-019",unit:"No",qty:550},{no:"1.02",desc:"Allow 5% of Item 1.01 for Wastage",type:"percent",pct:0.05,refs:["1.01"]},{no:"1.03",desc:"Cement",ref:"M-026",unit:"Bag",qty:1.3},{no:"1.04",desc:"Sand",ref:"M-113",unit:"Cu",qty:0.1},{no:"1.05",desc:"Water",ref:"M-157",unit:"Gal",qty:50},{no:"1.06",desc:"Mason",ref:"L-009",unit:"Day",qty:1.5},{no:"1.07",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2},{no:"1.08",desc:"Allow 5% of Items 1.06, 1.07 for Scaffolding",type:"percent",pct:0.05,refs:["1.06","1.07"]}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}],floors:true},
+  {code:"09.02",desc:"9\" thick brick wall cement sand 1:5 in ground floor",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Bricks",ref:"M-019",unit:"No",qty:1090},{no:"1.02",desc:"Allow 5% of Item 1.01 for Wastage",type:"percent",pct:0.05,refs:["1.01"]},{no:"1.03",desc:"Cement",ref:"M-026",unit:"Bag",qty:3},{no:"1.04",desc:"Sand",ref:"M-113",unit:"Cu",qty:0.2},{no:"1.05",desc:"Water",ref:"M-157",unit:"Gal",qty:115},{no:"1.06",desc:"Mason",ref:"L-009",unit:"Day",qty:2.25},{no:"1.07",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:3.75},{no:"1.08",desc:"Allow 3% of Items 1.06, 1.07 for Scaffolding",type:"percent",pct:0.03,refs:["1.06","1.07"]}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}],floors:true},
+  {code:"09.03",desc:"Brick work in cement sand 1:5 in foundation up to D.P.C",analysisQty:1,analysisUnit:"Cube",lines:[{no:"1.01",desc:"Bricks",ref:"M-019",unit:"No",qty:1450},{no:"1.02",desc:"Allow 5% of Item 1.01 for Wastage",type:"percent",pct:0.05,refs:["1.01"]},{no:"1.03",desc:"Cement",ref:"M-026",unit:"Bag",qty:4},{no:"1.04",desc:"Sand",ref:"M-113",unit:"Cu",qty:0.25},{no:"1.05",desc:"Water",ref:"M-157",unit:"Gal",qty:150},{no:"1.06",desc:"Mason",ref:"L-009",unit:"Day",qty:3},{no:"1.07",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:4}],rates:[{label:"1 Cube",mult:1},{label:"1 ft³",mult:0.01},{label:"1 m³",mult:0.3532}]},
+  {code:"09.05",desc:"Brick Work 13½\" thick in cement sand 1:5 in superstructure in ground floor",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Bricks",ref:"M-019",unit:"No",qty:1630},{no:"1.02",desc:"Allow 5% of Item 1.01 for wastage",type:"percent",pct:0.05,refs:["1.01"]},{no:"1.03",desc:"Cement",ref:"M-026",unit:"Bag",qty:4.5},{no:"1.04",desc:"Sand",ref:"M-113",unit:"Cu",qty:0.3},{no:"1.05",desc:"Water",ref:"M-157",unit:"Gal",qty:170},{no:"1.06",desc:"Mason",ref:"L-009",unit:"Day",qty:3.5},{no:"1.07",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:5.5},{no:"1.08",desc:"Allow 2% of Items 1.06, 1.07 for Scaffolding",type:"percent",pct:0.02,refs:["1.06","1.07"]}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}],floors:true},
+  {code:"09.07",desc:"4½\" Thick Brick Walls (wire cut) in cement sand 1:5 in superstructure in ground floor",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Wire Cut Bricks",ref:"M-164",unit:"No",qty:550},{no:"1.02",desc:"Allow 2% of Item 1.01 for Wastage",type:"percent",pct:0.02,refs:["1.01"]},{no:"1.03",desc:"Cement",ref:"M-026",unit:"Bag",qty:1.2},{no:"1.04",desc:"Sand",ref:"M-113",unit:"Cu",qty:0.08},{no:"1.05",desc:"Water",ref:"M-157",unit:"Gal",qty:30},{no:"1.06",desc:"Mason",ref:"L-009",unit:"Day",qty:1.5},{no:"1.07",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2},{no:"1.08",desc:"Allow 3% of Items 1.06, 1.07 for Scaffolding",type:"percent",pct:0.03,refs:["1.06","1.07"]}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}],floors:true},
+  {code:"09.11",desc:"Extra over for facing including raised pointing ⅛\" thick in cement and sand 1:1 in ground floor",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Cement",ref:"M-026",unit:"Bag",qty:0.5},{no:"1.02",desc:"Sand",ref:"M-113",unit:"Cu",qty:0.01},{no:"1.03",desc:"Acid",ref:"M-001",unit:"Gal",qty:0.1},{no:"1.04",desc:"Water",ref:"M-157",unit:"Gal",qty:10},{no:"1.05",desc:"Mason",ref:"L-009",unit:"Day",qty:5},{no:"1.06",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:3.5}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}]},
+]},
+{id:"10",title:"Roof Covering & Ceiling",items:[
+  {code:"10.A.01",desc:"Timber framework for Calicut pattern tile hip roof in single storey building",analysisQty:6,analysisUnit:"Sqrs",lines:[{no:"1.01",desc:"Timber Class I",ref:"M-136",unit:"Cu.ft",qty:34},{no:"1.02",desc:"Allow 10% of Item 1.01 for Wastage",type:"percent",pct:0.10,refs:["1.01"]},{no:"1.03",desc:"2\" × 1\" Reepers",ref:"M-149",unit:"L.ft",qty:660},{no:"1.04",desc:"Allow 5% of Item 1.03 for Wastage",type:"percent",pct:0.05,refs:["1.03"]},{no:"1.05",desc:"Wire Nails 6\" Long",ref:"M-163",unit:"Lbs",qty:8},{no:"1.06",desc:"Wire Nails 2\" Long",ref:"M-162",unit:"Lbs",qty:2},{no:"1.07",desc:"Carpenter",ref:"L-008",unit:"Day",qty:7},{no:"1.08",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:8}],rates:[{label:"1 Sqr",mult:1}]},
+  {code:"10.A.02",desc:"Roof Covering with Calicut pattern clay tiles in single storeyed building",analysisQty:6,analysisUnit:"Sqrs",lines:[{no:"1.01",desc:"Calicut Clay Tiles",ref:"M-108",unit:"No",qty:750},{no:"1.02",desc:"Carpenter",ref:"L-008",unit:"Day",qty:3},{no:"1.03",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:3}],rates:[{label:"1 Sqr",mult:1}]},
+  {code:"10.A.03",desc:"Timber framework for corrugated asbestos sheet roof in single storeyed building",analysisQty:3.6,analysisUnit:"Sqrs",lines:[{no:"1.01",desc:"Timber Class I",ref:"M-136",unit:"Cu.ft",qty:13.25},{no:"1.02",desc:"Allow 10% of Item 1.01 for Wastage",type:"percent",pct:0.10,refs:["1.01"]},{no:"1.03",desc:"Carpenter",ref:"L-008",unit:"Day",qty:2.5},{no:"1.04",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:3}],rates:[{label:"1 Sqr",mult:1}]},
+  {code:"10.A.04",desc:"Roof covering with corrugated asbestos sheets",analysisQty:3.6,analysisUnit:"Sqrs",lines:[{no:"1.01",desc:"Asbestos Corrugated Sheet",ref:"M-003",unit:"Sq.ft",qty:420},{no:"1.02",desc:"Roofing Screws and Washers",ref:"M-109",unit:"No",qty:72},{no:"1.03",desc:"Carpenter",ref:"L-008",unit:"Day",qty:1},{no:"1.04",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2}],rates:[{label:"1 Sqr",mult:1}]},
+  {code:"10.A.05",desc:"One layer half round clay tiles over corrugated asbestos roof covering",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Half Round Clay Tiles",ref:"M-056",unit:"No",qty:650},{no:"1.02",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2}],rates:[{label:"1 Sqr",mult:1}]},
+  {code:"10.A.06",desc:"Asbestos close fittings ridging fixed complete with roofing screws or bolts",analysisQty:13.33,analysisUnit:"L.ft.",lines:[{no:"1.01",desc:"Ridges 3'8\" Long - Asbestos",ref:"M-106",unit:"Pair",qty:4},{no:"1.02",desc:"Roofing Screws or Bolts",ref:"M-110",unit:"No",qty:16},{no:"1.03",desc:"Carpenter",ref:"L-008",unit:"Day",qty:0.25},{no:"1.04",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:0.25}],rates:[{label:"1 L.ft",mult:1}]},
+  {code:"10.A.07",desc:"Ridging covering with Calicut pattern ridge tiles bedded in cement lime mortar 1:1:4",analysisQty:12,analysisUnit:"L.ft.",lines:[{no:"1.01",desc:"Ridge Tiles (Calicut Pattern)",ref:"M-105",unit:"No",qty:9},{no:"1.02",desc:"Cement",ref:"M-026",unit:"Bag",qty:0.333},{no:"1.03",desc:"Sand",ref:"M-113",unit:"Cu",qty:0.02},{no:"1.04",desc:"Slaked Lime",ref:"M-115",unit:"Lbs",qty:15},{no:"1.05",desc:"Colouring Powder",ref:"M-036",unit:"Lbs",qty:0.5},{no:"1.06",desc:"Mason",ref:"L-009",unit:"Day",qty:0.25},{no:"1.07",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:0.25}],rates:[{label:"1 L.ft",mult:1}]},
+]},
+{id:"11",title:"Doors & Windows",items:[
+  {code:"11.A.01",desc:"Door Single Hung 3'3\" × 7'0\" high overall with frame, 1¼\" thick sash and 3¼\" × 2¼\" timber frame",analysisQty:22.75,analysisUnit:"Sq.ft",lines:[{no:"1.01",desc:"4\" × 3\" Timber Class I",ref:"M-138",unit:"Cu.ft",qty:1.5},{no:"1.02",desc:"Spur Stone",ref:"M-118",unit:"No",qty:2},{no:"1.03",desc:"Fibre/Plastic Plugs",ref:"M-045",unit:"No",qty:6},{no:"1.04",desc:"4\" Long Brass Screws",ref:"M-018",unit:"No",qty:6},{no:"1.05",desc:"5/8\" Mild Steel Dowels 4\" Long",ref:"M-067",unit:"No",qty:2},{no:"1.06",desc:"1½\" Planks",ref:"M-139",unit:"Sq.ft",qty:14},{no:"1.07",desc:"1\" Planks",ref:"M-139a",unit:"Sq.ft",qty:5},{no:"1.08",desc:"Carpenter",ref:"L-008",unit:"Day",qty:5},{no:"1.09",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:1.5}],rates:[{label:"1 Sq.ft",mult:1}]},
+  {code:"11.A.03",desc:"Plywood door single hung 3'1½\" × 6'11½\" overall with frame",analysisQty:21.75,analysisUnit:"Sq.ft",lines:[{no:"1.01",desc:"4\" × 3\" Timber Class I",ref:"M-138",unit:"Cu.ft",qty:1.8},{no:"1.02",desc:"Spur Stone",ref:"M-118",unit:"No",qty:2},{no:"1.03",desc:"Fibre/Plastic Plugs",ref:"M-045",unit:"No",qty:6},{no:"1.04",desc:"4\" Long Brass Screws",ref:"M-018",unit:"No",qty:6},{no:"1.05",desc:"6'9\" × 2'9\" Plywood Sash",ref:"M-074",unit:"No",qty:1},{no:"1.06",desc:"Carpenter",ref:"L-008",unit:"Day",qty:0.75},{no:"1.07",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:0.375},{no:"1.08",desc:"Mason - fixing frame",ref:"L-009",unit:"Day",qty:0.25},{no:"1.09",desc:"U/SK Labourer - fixing frame",ref:"L-007",unit:"Day",qty:0.25}],rates:[{label:"1 Sq.ft",mult:1}]},
+  {code:"11.A.06",desc:"1/8\" clear sheet glass panes exceeding 1'0\" but not exceeding 4 sq.ft, cut and fixed with timber beadings",analysisQty:9,analysisUnit:"Sq.ft",lines:[{no:"1.01",desc:"Glass Panes",ref:"M-027",unit:"Sq.ft",qty:9},{no:"1.02",desc:"½\" × ½\" Beading",ref:"M-133",unit:"L.ft",qty:30},{no:"1.03",desc:"Brass Panel Pins",ref:"M-013",unit:"Doz",qty:4},{no:"1.04",desc:"Glazier",ref:"L-010",unit:"Day",qty:0.5},{no:"1.05",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:0.5}],rates:[{label:"1 Sq.ft",mult:1}]},
+]},
+{id:"12",title:"Plumbing & Drainage",items:[
+  {code:"12.01",desc:"½\" Diameter PVC pipes fixed to walls (Specials paid separately)",analysisQty:10,analysisUnit:"L.ft",lines:[{no:"1.01",desc:"½\" PVC Pipes",ref:"M-095",unit:"L.ft",qty:13},{no:"1.02",desc:"1\" Clips and Nails",ref:"M-028",unit:"No",qty:3},{no:"1.03",desc:"Solvent Cement",ref:"M-117",unit:"Grms",qty:2},{no:"1.04",desc:"Plumber",ref:"L-002",unit:"Day",qty:0.125},{no:"1.05",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:0.125}],rates:[{label:"1 L.ft",mult:1}]},
+  {code:"12.02",desc:"¾\" Diameter PVC pipes fixed to walls (Specials paid separately)",analysisQty:10,analysisUnit:"L.ft",lines:[{no:"1.01",desc:"¾\" PVC Pipes",ref:"M-098",unit:"L.ft",qty:13},{no:"1.02",desc:"1\" Clips and Nails",ref:"M-028",unit:"No",qty:3},{no:"1.03",desc:"Solvent Cement",ref:"M-117",unit:"Grms",qty:3},{no:"1.04",desc:"Plumber",ref:"L-002",unit:"Day",qty:0.125},{no:"1.05",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:0.125}],rates:[{label:"1 L.ft",mult:1}]},
+  {code:"12.03",desc:"1\" Diameter PVC pipes fixed to walls (Specials paid separately)",analysisQty:100,analysisUnit:"L.ft",lines:[{no:"1.01",desc:"1\" PVC Pipes",ref:"M-094",unit:"L.ft",qty:100},{no:"1.02",desc:"Allow 5% of Item 1.01 for Wastage",type:"percent",pct:0.05,refs:["1.01"]},{no:"1.03",desc:"1\" PVC Sockets",ref:"M-077",unit:"No",qty:8},{no:"1.04",desc:"Solvent Cement",ref:"M-117",unit:"Grms",qty:32},{no:"1.05",desc:"1\" Clips and Nails",ref:"M-028",unit:"No",qty:35},{no:"1.06",desc:"Plumber",ref:"L-002",unit:"Day",qty:0.5},{no:"1.07",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:0.5}],rates:[{label:"1 L.ft",mult:1}]},
+  {code:"12.05",desc:"1½\" Diameter PVC pipes fixed to walls",analysisQty:100,analysisUnit:"L.ft",lines:[{no:"1.01",desc:"1½\" PVC Pipes",ref:"M-092",unit:"L.ft",qty:100},{no:"1.02",desc:"Allow 5% of Item 1.01 for Wastage",type:"percent",pct:0.05,refs:["1.01"]},{no:"1.03",desc:"1½\" PVC Sockets",ref:"M-100",unit:"No",qty:8},{no:"1.04",desc:"Solvent Cement",ref:"M-117",unit:"Grms",qty:64},{no:"1.05",desc:"1½\" Clips and Nails",ref:"M-029",unit:"No",qty:35},{no:"1.06",desc:"Plumber",ref:"L-002",unit:"Day",qty:0.75},{no:"1.07",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:0.75}],rates:[{label:"1 L.ft",mult:1}]},
+  {code:"12.07",desc:"3\" Diameter PVC pipes fixed to walls Type 1000",analysisQty:100,analysisUnit:"L.ft.",lines:[{no:"1.01",desc:"3\" PVC Pipes",ref:"M-097",unit:"L.ft",qty:100},{no:"1.02",desc:"Allow 5% of Item 1.01 for Wastage",type:"percent",pct:0.05,refs:["1.01"]},{no:"1.03",desc:"3\" PVC Sockets",ref:"M-103",unit:"No",qty:8},{no:"1.04",desc:"Solvent Cement",ref:"M-117",unit:"Grms",qty:200},{no:"1.05",desc:"3\" Clips and Screws",ref:"M-032",unit:"No",qty:35},{no:"1.06",desc:"Plumber",ref:"L-002",unit:"Day",qty:1},{no:"1.07",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:1}],rates:[{label:"1 L.ft",mult:1}]},
+]},
+{id:"13",title:"Plastering",items:[
+  {code:"13.A.01",desc:"5/8\" thick plastering to wall in Cement and sand 1:3 including Cement floating",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Cement",ref:"M-026",unit:"Bag",qty:1.4},{no:"1.02",desc:"Sand",ref:"M-113",unit:"Cu",qty:0.06},{no:"1.03",desc:"Water",ref:"M-157",unit:"Gal",qty:10},{no:"1.04",desc:"Mason",ref:"L-009",unit:"Day",qty:1},{no:"1.05",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:1.5},{no:"1.06",desc:"Allow 3% of Items 1.04, 1.05 for Scaffolding",type:"percent",pct:0.03,refs:["1.04","1.05"]}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}],floors:true},
+  {code:"13.A.02",desc:"5/8\" thick to wall in cement and sand 1:5 finished semi-rough with wooden float",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Cement",ref:"M-026",unit:"Bag",qty:0.8},{no:"1.03",desc:"Sand",ref:"M-113",unit:"Cu",qty:0.07},{no:"1.04",desc:"Water",ref:"M-157",unit:"Gal",qty:10},{no:"1.05",desc:"Mason",ref:"L-009",unit:"Day",qty:1},{no:"1.06",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:1.25}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}],floors:true},
+  {code:"13.A.04",desc:"5/8\" thick Plastering to wall in lime cement and sand 1:1:5 finished smooth with lime putty floating",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Cement",ref:"M-026",unit:"Bag",qty:0.8},{no:"1.02",desc:"Slaked Lime",ref:"M-115",unit:"Kg",qty:30},{no:"1.03",desc:"Sand",ref:"M-113",unit:"Cu",qty:0.07},{no:"1.04",desc:"Water",ref:"M-157",unit:"Gal",qty:10},{no:"1.05",desc:"Mason",ref:"L-009",unit:"Day",qty:1.5},{no:"1.06",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:1.5},{no:"1.07",desc:"Allow 3% of Items 1.05, 1.06 for Scaffolding",type:"percent",pct:0.03,refs:["1.05","1.06"]}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}],floors:true},
+]},
+{id:"14",title:"Tiling",items:[
+  {code:"14.A.01",desc:"Glazed tiles (6\"×6\") fixed to walls including bedding in cement mortar 1:2 in ground floor",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Glazed Tiles 6\" × 6\"",ref:"M-155",unit:"No",qty:400},{no:"1.02",desc:"Allow 10% of Item 1.01 for Wastage",type:"percent",pct:0.10,refs:["1.01"]},{no:"1.03",desc:"Cement",ref:"M-026",unit:"Bag",qty:2.5},{no:"1.04",desc:"Sand",ref:"M-113",unit:"Cu",qty:0.11},{no:"1.05",desc:"White Cement",ref:"M-159",unit:"Lbs",qty:1},{no:"1.06",desc:"Mason",ref:"L-009",unit:"Day",qty:4},{no:"1.07",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:4},{no:"1.08",desc:"U/SK Labourer (pointing)",ref:"L-007",unit:"Day",qty:0.25}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}],floors:true},
+  {code:"14.A.02",desc:"Glazed tiles (8\"×12\") fixed to walls including bedding in cement mortar 1:2 in ground floor",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Glazed Tiles 8\" × 12\"",ref:"M-156",unit:"No",qty:150},{no:"1.02",desc:"Allow 10% of Item 1.01 for Wastage",type:"percent",pct:0.10,refs:["1.01"]},{no:"1.03",desc:"Cement",ref:"M-026",unit:"Bag",qty:2.5},{no:"1.04",desc:"Sand",ref:"M-113",unit:"Cu",qty:0.11},{no:"1.05",desc:"White Cement",ref:"M-159",unit:"Lbs",qty:1},{no:"1.06",desc:"Mason",ref:"L-009",unit:"Day",qty:4},{no:"1.07",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:4},{no:"1.08",desc:"U/SK Labourer (pointing)",ref:"L-007",unit:"Day",qty:0.25}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}],floors:true},
+  {code:"14.B.01",desc:"Terrazzo floor tiles 12\"×12\" on ½\" thick cement and sand 1:2 in ground floor",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Terrazzo Tiles 12\" × 12\"",ref:"M-132",unit:"No",qty:100},{no:"1.02",desc:"Allow 5% of Item 1.01 for Wastage",type:"percent",pct:0.05,refs:["1.01"]},{no:"1.03",desc:"Cement",ref:"M-026",unit:"Bag",qty:1.25},{no:"1.04",desc:"Sand",ref:"M-113",unit:"Cu",qty:0.07},{no:"1.05",desc:"Coloured Pigment",ref:"M-035",unit:"Lbs",qty:2},{no:"1.06",desc:"Wax Polish",ref:"M-158",unit:"Lbs",qty:0.5},{no:"1.07",desc:"Cotton Waste",ref:"M-037",unit:"Lbs",qty:2},{no:"1.08",desc:"Mason",ref:"L-009",unit:"Day",qty:4},{no:"1.09",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:3},{no:"1.10",desc:"U/SK Labourer (polishing)",ref:"L-007",unit:"Day",qty:0.5}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}],floors:true},
+  {code:"14.B.02",desc:"Pressed floor tiles 8\"×8\" bedded in ½\" cement mortar 1:2 and pointing in neat cement in ground floor",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Pressed Tiles 8\" × 8\"",ref:"M-130",unit:"No",qty:225},{no:"1.02",desc:"Allow 5% of Item 1.01 for Wastage",type:"percent",pct:0.05,refs:["1.01"]},{no:"1.03",desc:"Cement",ref:"M-026",unit:"Bag",qty:1.25},{no:"1.04",desc:"Sand",ref:"M-113",unit:"Cu",qty:0.07},{no:"1.05",desc:"Colouring Powder",ref:"M-036",unit:"Lbs",qty:0.25},{no:"1.06",desc:"Cotton Waste",ref:"M-037",unit:"Lbs",qty:2},{no:"1.07",desc:"Mason",ref:"L-009",unit:"Day",qty:4},{no:"1.08",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:4},{no:"1.09",desc:"U/SK Labourer (polishing)",ref:"L-007",unit:"Day",qty:0.5}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}],floors:true},
+]},
+{id:"15",title:"Ceiling",items:[
+  {code:"15.01",desc:"Timber Framework for 4'0\" × 4'0\" flat asbestos ceiling comprising 4\"×2\" joists and 2\"×2\" bearers in Class I timber",analysisQty:1.95,analysisUnit:"Sqrs",lines:[{no:"1.01",desc:"Timber Class I",ref:"M-136",unit:"Cu.ft",qty:8},{no:"1.02",desc:"2\" Nails",ref:"M-072",unit:"Lbs",qty:1},{no:"1.03",desc:"Fibre/Plastic Plugs",ref:"M-045",unit:"No",qty:26},{no:"1.04",desc:"Cement",ref:"M-026",unit:"Bag",qty:0.23},{no:"1.05",desc:"Sand",ref:"M-113",unit:"Cu",qty:0.02},{no:"1.06",desc:"Brush 2\"",ref:"M-022",unit:"No",qty:0.25},{no:"1.07",desc:"Tarnap",ref:"M-119",unit:"Gal",qty:0.333},{no:"1.08",desc:"Carpenter",ref:"L-008",unit:"Day",qty:2.5},{no:"1.09",desc:"Mason",ref:"L-009",unit:"Day",qty:0.5},{no:"1.10",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:1.5},{no:"1.11",desc:"Allow 3% of Items 1.08, 1.09, 1.10 for Scaffolding",type:"percent",pct:0.03,refs:["1.08","1.09","1.10"]}],rates:[{label:"1 Sqr",mult:1}]},
+  {code:"15.02",desc:"Horizontal ceiling lining using 4'0\" × 4'0\" flat asbestos cement sheets fixed with beading and cove mouldings",analysisQty:1.95,analysisUnit:"Sqrs",lines:[{no:"1.01",desc:"Flat Asbestos Sheets",ref:"M-048",unit:"Sq.ft",qty:210},{no:"1.02",desc:"2\"×2\" Halmilla Cove Moulding",ref:"M-145",unit:"Sq.ft",qty:60},{no:"1.03",desc:"1½\"×½\" Halmilla Beadings",ref:"M-134",unit:"L.ft",qty:125},{no:"1.04",desc:"¼\" Clout Nails",ref:"M-033",unit:"Lbs",qty:0.25},{no:"1.05",desc:"Brass Screws 1½\"",ref:"M-015",unit:"No",qty:96},{no:"1.06",desc:"Carpenter",ref:"L-008",unit:"Day",qty:1.5},{no:"1.07",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2},{no:"1.08",desc:"Allow 3% of Items 1.06, 1.07 for Scaffolding",type:"percent",pct:0.03,refs:["1.06","1.07"]}],rates:[{label:"1 Sqr",mult:1}]},
+  {code:"15.03",desc:"¾\" thick T&G Lunumidella ceiling boards fixed horizontal on 4\"×2\" Class I timber joists",analysisQty:1.95,analysisUnit:"Sqrs",lines:[{no:"1.01",desc:"4\" × 2\" Timber Joists",ref:"M-146",unit:"L.ft",qty:115},{no:"1.02",desc:"6\" × ¾\" Lunumidella Ceiling Planks",ref:"M-135",unit:"Sq.ft",qty:215},{no:"1.03",desc:"Cement",ref:"M-026",unit:"Bag",qty:0.027},{no:"1.04",desc:"Sand",ref:"M-113",unit:"Cu",qty:0.04},{no:"1.05",desc:"1½\" Brass Nails",ref:"M-012",unit:"Lbs",qty:8.81},{no:"1.06",desc:"Mason - making holes, fixing joists",ref:"L-009",unit:"Day",qty:1},{no:"1.07",desc:"Carpenter - making holes, fixing joists",ref:"L-008",unit:"Day",qty:1},{no:"1.08",desc:"U/SK Labourer - making holes",ref:"L-007",unit:"Day",qty:3},{no:"1.09",desc:"Carpenter - Fixing ceiling boards",ref:"L-008",unit:"Day",qty:3},{no:"1.10",desc:"U/SK Labourer - Fixing ceiling boards",ref:"L-007",unit:"Day",qty:4},{no:"1.11",desc:"Allow 3% of Items 1.06-1.10 for Scaffolding",type:"percent",pct:0.03,refs:["1.06","1.07","1.08","1.09","1.10"]}],rates:[{label:"1 Sqr",mult:1}]},
+]},
+{id:"16",title:"Painting",items:[
+  {code:"16.A.01",desc:"Preparing and apply one coat alkali resistant primer and two coats emulsion paint to walls",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Primer",ref:"M-075",unit:"litre",qty:0.9},{no:"1.02",desc:"Emulsion Paint",ref:"M-043",unit:"litre",qty:1.4},{no:"1.03",desc:"Water",ref:"M-157",unit:"Gal",qty:0.1},{no:"1.04",desc:"6\" Brush",ref:"M-021",unit:"No",qty:0.1},{no:"1.05",desc:"Sand Papers",ref:"M-114",unit:"Sheet",qty:2},{no:"1.06",desc:"Painter",ref:"L-001",unit:"Day",qty:1.25},{no:"1.07",desc:"Allow 3% of Item 1.06 for Scaffolding",type:"percent",pct:0.03,refs:["1.06"]}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}],floors:true},
+  {code:"16.A.02",desc:"Painting walls with emulsion paint (2 Coats)",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Emulsion Paint - First coat",ref:"M-043",unit:"litre",qty:0.757},{no:"1.02",desc:"Emulsion Paint - Second coat",ref:"M-043",unit:"litre",qty:0.649},{no:"1.03",desc:"6\" Brush",ref:"M-021",unit:"No",qty:0.1},{no:"1.04",desc:"Water",ref:"M-157",unit:"Gal",qty:0.1},{no:"1.05",desc:"Painter",ref:"L-001",unit:"Day",qty:0.75},{no:"1.06",desc:"Allow 3% of Item 1.05 for Scaffolding",type:"percent",pct:0.03,refs:["1.05"]}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}],floors:true},
+  {code:"16.A.03",desc:"White or colourwashing two coats in single storey",analysisQty:10,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Boiled Lime",ref:"M-009",unit:"Cwt",qty:0.5},{no:"1.02",desc:"Salt",ref:"M-112",unit:"Lbs",qty:2},{no:"1.03",desc:"Yellow Ochre",ref:"M-166",unit:"Lbs",qty:0.5},{no:"1.04",desc:"Blue",ref:"M-008",unit:"Ozs",qty:2},{no:"1.05",desc:"6\" Brush",ref:"M-021",unit:"No",qty:0.333},{no:"1.06",desc:"Water",ref:"M-157",unit:"Gal",qty:10},{no:"1.07",desc:"Painter",ref:"L-001",unit:"Day",qty:2.5},{no:"1.08",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:2.5},{no:"1.09",desc:"Allow 3% of Items 1.07, 1.08 for Scaffolding",type:"percent",pct:0.03,refs:["1.07","1.08"]}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}]},
+  {code:"16.B.01",desc:"Preparing and apply one coat alkali resistant primer and two coats emulsion paint to soffit of slabs",analysisQty:1,analysisUnit:"Sq",lines:[{no:"1.01",desc:"Primer",ref:"M-075",unit:"litre",qty:0.9},{no:"1.02",desc:"Emulsion Paint",ref:"M-043",unit:"litre",qty:1.5},{no:"1.03",desc:"Water",ref:"M-157",unit:"Gal",qty:0.1},{no:"1.04",desc:"6\" Brush",ref:"M-021",unit:"No",qty:0.1},{no:"1.05",desc:"Painter",ref:"L-001",unit:"Day",qty:1.75},{no:"1.06",desc:"Allow 3% of Item 1.05 for Scaffolding",type:"percent",pct:0.03,refs:["1.05"]}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}],floors:true},
+  {code:"16.C.01",desc:"Prepare and apply one coat of preservative (oil type) to structural timber",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Wood Preservative",ref:"M-165",unit:"Gal",qty:0.605},{no:"1.02",desc:"3\" Brush",ref:"M-020",unit:"No",qty:0.1},{no:"1.03",desc:"Painter",ref:"L-001",unit:"Day",qty:0.75},{no:"1.04",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:0.5}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}]},
+  {code:"16.C.03",desc:"Preparing and painting wood work with primer and 2 coats Enamel paint",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Primer",ref:"M-075",unit:"litre",qty:0.75},{no:"1.02",desc:"Enamel Paint",ref:"M-044",unit:"litre",qty:2.5},{no:"1.03",desc:"Brush 2\"",ref:"M-022",unit:"No",qty:0.1},{no:"1.04",desc:"Sand Papers",ref:"M-114",unit:"No",qty:2},{no:"1.05",desc:"Painter",ref:"L-001",unit:"Day",qty:1.5},{no:"1.06",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:0.5}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}]},
+  {code:"16.C.04",desc:"Varnishing two coats with copal varnish after sandpapering",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Varnish (Copal)",ref:"M-154",unit:"litre",qty:1.8},{no:"1.02",desc:"3\" Brush",ref:"M-020",unit:"No",qty:0.333},{no:"1.03",desc:"Painter",ref:"L-001",unit:"Day",qty:0.5},{no:"1.04",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:0.5}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}]},
+  {code:"16.D.01",desc:"Prepare surface of steel trusses and apply two coats of anticorrosive primer",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Anti Corrosive Primer",ref:"M-002",unit:"litre",qty:2.25},{no:"1.02",desc:"Mineral Turpentine or Thinner",ref:"M-069",unit:"litre",qty:0.15},{no:"1.03",desc:"Wire Brush",ref:"M-160",unit:"No",qty:1},{no:"1.04",desc:"Brush 2\"",ref:"M-022",unit:"No",qty:0.125},{no:"1.05",desc:"Painter",ref:"L-001",unit:"Day",qty:1.5},{no:"1.06",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:1.5}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}]},
+  {code:"16.D.02",desc:"Apply one coat anti-Corrosive primer and two coat enamel paint on already shop primed and erected steel roof truss",analysisQty:1,analysisUnit:"Sqr",lines:[{no:"1.01",desc:"Anti Corrosive Primer",ref:"M-002",unit:"litre",qty:0.2},{no:"1.02",desc:"Enamel Paint",ref:"M-044",unit:"litre",qty:1.33},{no:"1.03",desc:"Mineral Turpentine or Thinner",ref:"M-069",unit:"litre",qty:0.2},{no:"1.04",desc:"Brush 2\"",ref:"M-022",unit:"No",qty:0.2},{no:"1.05",desc:"Painter",ref:"L-001",unit:"Day",qty:2.5},{no:"1.06",desc:"U/SK Labourer",ref:"L-007",unit:"Day",qty:1},{no:"1.07",desc:"Allow 3% of Items 1.05, 1.06 for Scaffolding",type:"percent",pct:0.03,refs:["1.05","1.06"]}],rates:[{label:"1 Sqr",mult:1},{label:"1 ft²",mult:0.01},{label:"1 m²",mult:0.1076}]},
+]},
+];
+
+// ============================================================
+// APP STATE
+// ============================================================
+let userRates = {};
+let manualRates = {};       // FIX: NEW - {itemCode: {lineNo: rateValue}}
+let manualModeItems = new Set(); // FIX: NEW - items using manual mode
+let project = {name:"BSR Rate Analysis",client:"",by:"",date:"",currency:"Rs."};
+let currentSection = 'dashboard';
+let priceTab = 'materials';
+let searchQuery = '';
+
+function loadFromStorage() {
+  try {
+    const s = localStorage.getItem('bsr_rates'); if(s) userRates = JSON.parse(s);
+    const p = localStorage.getItem('bsr_project'); if(p) project = {...project,...JSON.parse(p)};
+    const m = localStorage.getItem('bsr_manual_rates'); if(m) manualRates = JSON.parse(m);
+    const mm = localStorage.getItem('bsr_manual_mode'); if(mm) manualModeItems = new Set(JSON.parse(mm));
+  } catch(e){}
+}
+
+function saveToStorage() {
+  try {
+    localStorage.setItem('bsr_rates', JSON.stringify(userRates));
+    localStorage.setItem('bsr_project', JSON.stringify(project));
+    localStorage.setItem('bsr_manual_rates', JSON.stringify(manualRates));
+    localStorage.setItem('bsr_manual_mode', JSON.stringify([...manualModeItems]));
+    const ind = document.getElementById('saveIndicator');
+    ind.style.opacity='1'; setTimeout(()=>ind.style.opacity='0',2000);
+  } catch(e){}
+}
+
+function getRate(code) { return parseFloat(userRates[code]) || 0; }
+function getRatesFilled() { return Object.keys(userRates).filter(k=>parseFloat(userRates[k])>0).length; }
+function getTotalRates() { return MATERIALS.length + LABOUR.length + PLANT.length; }
+
+// ============================================================
+// CALCULATION ENGINE
+// ============================================================
+function calcItemRate(itemCode, sectionItems) {
+  let item = null; let secItems = sectionItems || [];
+  for(const sec of SECTIONS){const f=sec.items.find(i=>i.code===itemCode);if(f){item=f;secItems=sec.items;break;}}
+  if(!item) return 0;
+  return calcItem(item,secItems).total / item.analysisQty;
+}
+
+function calcItem(item, sectionItems) {
+  const amtByNo = {};
+  const useManual = manualModeItems.has(item.code); // FIX: check manual mode
+  const lines = item.lines.map(line => {
+    let amt = 0;
+    if(line.type==='percent'){
+      const base = (line.refs||[]).reduce((s,r)=>s+(amtByNo[r]||0),0);
+      amt = base * line.pct;
+    } else if(line.isSubRef){
+      const refRate = calcItemRate(line.ref, sectionItems);
+      amt = refRate * line.qty;
+    } else {
+      // FIX: use manual rate if in manual mode, else use basic prices
+      const rate = useManual
+        ? (parseFloat((manualRates[item.code]||{})[line.no]) || 0)
+        : getRate(line.ref);
+      amt = rate * (line.qty || 0);
+    }
+    amtByNo[line.no] = amt;
+    return {...line, amount: amt};
+  });
+  const total = lines.reduce((s,l)=>s+l.amount,0);
+  return {lines, total};
+}
+
+// ============================================================
+// UI RENDERING
+// ============================================================
+function toggleSidebar(){
+  const s=document.getElementById('sidebar');
+  const o=document.getElementById('sidebarOverlay');
+  s.classList.toggle('open');
+  o.classList.toggle('show');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+}
+
+function navigate(section){
+  currentSection = section;
+  document.querySelectorAll('.sidebar-item').forEach(el=>{
+    el.classList.toggle('active', el.dataset.section===section);
+  });
+  // Auto-close sidebar on mobile after navigation
+  if(window.innerWidth<=768) closeSidebar();
+  render();
+}
+
+function buildSidebar(){
+  const nav = document.getElementById('sectionNav');
+  nav.innerHTML = SECTIONS.map(s=>`
+    <div class="sidebar-item" data-section="${s.id}" onclick="navigate('${s.id}')">
+      <span style="font-family:'DM Mono',monospace;font-size:11px;opacity:0.6">${s.id}</span>
+      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.title}</span>
+      <span class="badge">${s.items.length}</span>
+    </div>`).join('');
+  const sel = document.getElementById('exportSection');
+  if(sel) sel.innerHTML = '<option value="all">All Sections</option>' +
+    SECTIONS.map(s=>`<option value="${s.id}">${s.id}. ${s.title}</option>`).join('');
+}
+
+function render(){
+  const main = document.getElementById('mainContent');
+  if(currentSection==='dashboard') main.innerHTML = renderDashboard();
+  else if(currentSection==='basic-prices') main.innerHTML = renderBasicPrices();
+  else { const sec=SECTIONS.find(s=>s.id===currentSection); if(sec) main.innerHTML=renderSection(sec); }
+  // FIX: Don't auto-focus search on every render — only focus if actually on basic-prices
+}
+
+function renderDashboard(){
+  const filled=getRatesFilled(), total=getTotalRates(), pct=total?Math.round(filled/total*100):0;
+  const allItemsTotal=SECTIONS.reduce((s,sec)=>s+sec.items.length,0);
+  const manualCount=[...manualModeItems].length;
+  return `<div style="max-width:920px">
+  <div style="margin-bottom:24px">
+    <h1 style="font-family:'DM Serif Display',serif;font-size:28px;color:var(--white)">${project.name}</h1>
+    ${project.client?`<p style="color:var(--text3);font-size:13px;margin-top:4px">Client: ${project.client}${project.by?' &nbsp;|&nbsp; Prepared by: '+project.by:''}${project.date?' &nbsp;|&nbsp; Date: '+project.date:''}</p>`:''}
+  </div>
+  <div class="dashboard-grid">
+    <div class="stat-card teal"><div class="stat-label">Rate Items</div><div class="stat-value">${allItemsTotal}</div><div class="stat-sub">across 16 sections</div></div>
+    <div class="stat-card gold"><div class="stat-label">Basic Prices</div><div class="stat-value">${filled}</div><div class="stat-sub">of ${total} entered</div></div>
+    <div class="stat-card"><div class="stat-label">Completion</div><div class="stat-value">${pct}%</div><div class="stat-sub">basic prices filled</div></div>
+    <div class="stat-card green"><div class="stat-label">Sections</div><div class="stat-value">16</div><div class="stat-sub">trade sections</div></div>
+    ${manualCount>0?`<div class="stat-card" style="border-color:var(--orange)"><div class="stat-label">Manual Mode</div><div class="stat-value" style="color:var(--orange)">${manualCount}</div><div class="stat-sub">items using manual rates</div></div>`:''}
+  </div>
+  <div class="rates-progress" style="margin-bottom:24px;">
+    <span style="font-size:12px;color:var(--text3);white-space:nowrap">Prices Progress</span>
+    <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <span style="font-size:12px;color:var(--teal);white-space:nowrap">${filled}/${total}</span>
+  </div>
+  <div class="panel">
+    <div class="panel-header">
+      <div><div class="panel-title">Getting Started</div><div class="panel-sub">BSR — Department of Buildings, Building Schedule of Rates</div></div>
+    </div>
+    <div class="panel-body">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px">
+        ${[
+          {step:"1",title:"Enter Basic Prices",desc:"Go to Basic Prices and enter current market rates for Materials, Labour & Plant",icon:"💰",section:"basic-prices"},
+          {step:"2",title:"Review Breakdowns",desc:"Navigate to any of the 16 trade sections to view auto-calculated rate breakdowns",icon:"📋",section:"01"},
+          {step:"3",title:"Manual Section Rates",desc:"In any section item, click 'Manual Mode' to enter rates directly without basic prices",icon:"⚡",section:null},
+          {step:"4",title:"Export Your Report",desc:"Export completed rate breakdowns as Professional Excel or PDF for reporting",icon:"📊",section:null},
+        ].map(s=>`<div style="background:var(--navy3);border:1px solid var(--border);border-radius:8px;padding:16px;cursor:${s.section?'pointer':'default'}" ${s.section?`onclick="navigate('${s.section}')"`:''}>
+          <div style="font-size:24px;margin-bottom:8px">${s.icon}</div>
+          <div style="font-weight:600;font-size:13px;color:var(--white);margin-bottom:4px">Step ${s.step}: ${s.title}</div>
+          <div style="font-size:12px;color:var(--text3)">${s.desc}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-header"><div class="panel-title">Section Overview</div></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1px;background:var(--border)">
+      ${SECTIONS.map(s=>{
+        const hasAnyRate=s.items.some(item=>calcItem(item,s.items).total>0);
+        const hasManual=s.items.some(item=>manualModeItems.has(item.code));
+        return `<div style="background:var(--navy2);padding:12px 16px;cursor:pointer" onclick="navigate('${s.id}')">
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3)">${s.id}</div>
+          <div style="font-size:13px;color:var(--text);margin:2px 0">${s.title}</div>
+          <div style="font-size:11px;color:${hasAnyRate?'var(--teal)':hasManual?'var(--orange)':'var(--text3)'}">
+            ${s.items.length} items ${hasAnyRate?'· has rates':hasManual?'· manual mode':''}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>
+  </div>`;
+}
+
+function renderBasicPrices(){
+  const allItems = priceTab==='materials'?MATERIALS:priceTab==='labour'?LABOUR:PLANT;
+  const filtered = searchQuery ? allItems.filter(m=>
+    m.code.toLowerCase().includes(searchQuery.toLowerCase())||
+    m.desc.toLowerCase().includes(searchQuery.toLowerCase())) : allItems;
+  const filled = allItems.filter(m=>parseFloat(userRates[m.code])>0).length;
+  return `<div class="panel" style="max-width:900px">
+    <div class="panel-header">
+      <div><div class="panel-title">Basic Prices</div><div class="panel-sub">${project.currency} per unit • ${filled}/${allItems.length} prices entered</div></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost" onclick="clearPriceTab()">Clear Tab</button>
+      </div>
+    </div>
+    <div class="price-tabs">
+      <div class="price-tab ${priceTab==='materials'?'active':''}" onclick="switchPriceTab('materials')">Materials (${MATERIALS.filter(m=>parseFloat(userRates[m.code])>0).length}/${MATERIALS.length})</div>
+      <div class="price-tab ${priceTab==='labour'?'active':''}" onclick="switchPriceTab('labour')">Labour (${LABOUR.filter(m=>parseFloat(userRates[m.code])>0).length}/${LABOUR.length})</div>
+      <div class="price-tab ${priceTab==='plant'?'active':''}" onclick="switchPriceTab('plant')">Plant (${PLANT.filter(m=>parseFloat(userRates[m.code])>0).length}/${PLANT.length})</div>
+    </div>
+    <div class="price-search">
+      <input class="search-input" id="searchInput" placeholder="Search by code or description..." value="${searchQuery.replace(/"/g,'&quot;')}"
+        oninput="searchQuery=this.value;renderBasicPricesInPlace()">
+      <span style="font-size:12px;color:var(--text3)">${filtered.length} items</span>
+    </div>
+    <div class="prices-table-wrap" style="max-height:calc(100vh - 280px);overflow-y:auto">
+    <table>
+      <thead><tr>
+        <th style="width:100px">Code</th><th>Description</th><th style="width:80px">Unit</th><th style="width:130px;text-align:right">Rate (${project.currency})</th>
+      </tr></thead>
+      <tbody id="priceTableBody">
+        ${renderPriceRows(filtered)}
+      </tbody>
+    </table>
+    </div>
+  </div>`;
+}
+
+function renderPriceRows(filtered){
+  return filtered.map(m=>{
+    const val=userRates[m.code]||'';
+    const hl=searchQuery?m.desc.replace(new RegExp(searchQuery.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),s=>`<span class="hl">${s}</span>`):m.desc;
+    return `<tr>
+      <td><span class="code-badge">${m.code}</span></td>
+      <td class="desc-col">${hl}</td>
+      <td style="color:var(--text3)">${m.unit}</td>
+      <td style="text-align:right">
+        <input class="price-input ${val?'has-value':''}" type="number" min="0" step="0.01"
+          data-code="${m.code}" value="${val}" placeholder="0.00"
+          oninput="updateRate('${m.code}',this.value);this.classList.toggle('has-value',!!this.value)">
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function renderBasicPricesInPlace(){
+  // FIX: update in-place without full re-render (no focus stealing)
+  const allItems = priceTab==='materials'?MATERIALS:priceTab==='labour'?LABOUR:PLANT;
+  const filtered = searchQuery ? allItems.filter(m=>
+    m.code.toLowerCase().includes(searchQuery.toLowerCase())||
+    m.desc.toLowerCase().includes(searchQuery.toLowerCase())) : allItems;
+  const tbody = document.getElementById('priceTableBody');
+  if(tbody) tbody.innerHTML = renderPriceRows(filtered);
+  // Update count display
+  const countEl = document.querySelector('.price-search span');
+  if(countEl) countEl.textContent = filtered.length+' items';
+}
+
+function renderSection(sec){
+  return `<div style="max-width:980px">
+  <div class="section-hero">
+    <div class="section-num">${sec.id}</div>
+    <div class="section-info">
+      <h2>${sec.title}</h2>
+      <p>${sec.items.length} rate breakdown item${sec.items.length!==1?'s':''} • BSR Department of Buildings</p>
+    </div>
+    <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-ghost btn-sm" onclick="exportSectionPDF('${sec.id}')">📄 PDF</button>
+      <button class="btn btn-primary btn-sm" onclick="exportSectionExcel('${sec.id}')">📊 Excel</button>
+    </div>
+  </div>
+  ${sec.items.map(item=>renderItem(item,sec.items)).join('')}
+  </div>`;
+}
+
+function renderItem(item, sectionItems){
+  const {lines,total} = calcItem(item,sectionItems);
+  const ratePerUnit = item.analysisQty>0 ? total/item.analysisQty : 0;
+  const useManual = manualModeItems.has(item.code);
+  // FIX: Floor rates now use first rate mult (which is always 1 = primary unit)
+  const floorMult = [1,1.1,1.21,1.331];
+  const floorNames = ['Ground Floor','1st Floor','2nd Floor','3rd Floor'];
+  const primaryMult = item.rates[0]?.mult || 1;
+
+  return `<div class="item-card">
+    <div class="item-header">
+      <span class="item-code">${item.code}</span>
+      <div style="flex:1">
+        <div class="item-desc">${item.desc}${useManual?'<span class="manual-badge">⚡ Manual Mode</span>':''}</div>
+        <div class="item-analysis">Analysis for ${item.analysisQty} ${item.analysisUnit}</div>
+      </div>
+      <button class="btn btn-sm ${useManual?'btn-orange':'btn-ghost'}" 
+        onclick="toggleManualMode('${item.code}')" 
+        title="${useManual?'Disable manual mode — revert to Basic Prices':'Enable manual mode — enter rates directly per line'}">
+        ${useManual?'⚡ Manual ON':'⚡ Manual Mode'}
+      </button>
+    </div>
+    ${useManual?`<div class="manual-section"><span class="manual-notice">⚡ Manual Rate Entry Mode — enter rates directly per line below (Basic Prices not used for this item)</span></div>`:''}
+    <div class="table-scroll-wrap"><table class="breakdown-table">
+      <thead><tr>
+        <th style="width:50px">No.</th>
+        <th>Description</th>
+        <th style="width:60px">Ref</th>
+        <th style="width:60px">Unit</th>
+        <th style="width:70px;text-align:right">Qty</th>
+        <th style="width:${useManual?'130px':'90px'};text-align:right">Rate ${useManual?'<span style="color:var(--orange);font-size:9px">(enter)</span>':''}</th>
+        <th style="width:100px;text-align:right">Amount</th>
+      </tr></thead>
+      <tbody>
+        ${lines.map(line=>{
+          const isPercent = line.type==='percent';
+          const isSubRef = line.isSubRef;
+          const r = isSubRef ? calcItemRate(line.ref,sectionItems) : (useManual&&!isPercent ? (parseFloat((manualRates[item.code]||{})[line.no])||0) : getRate(line.ref));
+          const rateDisplay = isPercent ? `${(line.pct*100).toFixed(1)}%` : (r>0?r.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'—');
+          const refDisplay = isPercent?'—':(line.ref||'—');
+          const qtyDisplay = isPercent?'—':(line.qty!==undefined?line.qty:'—');
+          // FIX: render editable input for manual mode (non-percent, non-subref lines)
+          let rateCell;
+          if(useManual && !isPercent && !isSubRef){
+            const mv = (manualRates[item.code]||{})[line.no] || '';
+            rateCell = `<input class="manual-input ${mv?'has-value':''}" type="number" min="0" step="0.01" value="${mv}" placeholder="0.00"
+              oninput="updateManualRate('${item.code}','${line.no}',this.value);this.classList.toggle('has-value',!!this.value);recalcItem('${item.code}')">`;
+          } else {
+            rateCell = isPercent ? rateDisplay : (r>0?rateDisplay:`<span style="color:var(--red);font-size:10px">no rate</span>`);
+          }
+          return `<tr class="${isPercent?'percent-row':''}">
+            <td style="color:var(--text3);font-family:'DM Mono',monospace;font-size:11px">${line.no}</td>
+            <td class="desc-col">${line.desc}</td>
+            <td class="ref-col">${refDisplay}</td>
+            <td style="color:var(--text3);font-size:11px">${line.unit||'—'}</td>
+            <td class="num-col">${qtyDisplay}</td>
+            <td class="num-col rate-col">${rateCell}</td>
+            <td class="num-col amt-col">${line.amount>0?line.amount.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'—'}</td>
+          </tr>`;
+        }).join('')}
+        <tr class="total-row">
+          <td colspan="6" style="text-align:right;color:var(--text2);font-size:12px">Total for ${item.analysisQty} ${item.analysisUnit}</td>
+          <td class="num-col" style="color:var(--gold2);font-weight:700">${total.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
+        </tr>
+      </tbody>
+    </table></div>
+    <div class="rate-summary">
+      ${item.rates.map((r,i)=>{
+        const v=ratePerUnit*r.mult;
+        return `<div class="rate-badge ${i===0?'primary':'secondary'}">
+          <span class="label">Rate per</span>
+          <span class="value">${v>0?v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'—'}</span>
+          <span class="unit">${r.label}</span>
+        </div>`;
+      }).join('')}
+    </div>
+    ${item.floors?`<div class="floor-rates">
+      ${floorMult.map((mult,i)=>{
+        // FIX: Use primary unit mult (always 1) for floor calculations, NOT the last rate
+        const v = ratePerUnit * primaryMult * mult;
+        return `<div class="floor-badge">${floorNames[i]}: <strong>${v>0?v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'—'}</strong> / ${item.rates[0]?.label||'unit'}</div>`;
+      }).join('')}
+    </div>`:''}
+  </div>`;
+}
+
+// FIX: New function - toggle manual mode for an item
+function toggleManualMode(itemCode){
+  if(manualModeItems.has(itemCode)){
+    manualModeItems.delete(itemCode);
+  } else {
+    manualModeItems.add(itemCode);
+    if(!manualRates[itemCode]) manualRates[itemCode]={};
+  }
+  saveToStorage();
+  render();
+}
+
+// FIX: New function - update manual rate for a specific line
+function updateManualRate(itemCode, lineNo, val){
+  if(!manualRates[itemCode]) manualRates[itemCode]={};
+  if(val===''||val===null) delete manualRates[itemCode][lineNo];
+  else manualRates[itemCode][lineNo] = parseFloat(val)||0;
+  saveToStorage();
+}
+
+// FIX: New function - re-render just the item card totals without full page re-render
+function recalcItem(itemCode){
+  // Find the item and its section
+  for(const sec of SECTIONS){
+    const item = sec.items.find(i=>i.code===itemCode);
+    if(item){
+      const {lines,total} = calcItem(item, sec.items);
+      const ratePerUnit = item.analysisQty>0?total/item.analysisQty:0;
+      // Update amount cells and totals in the DOM
+      const cards = document.querySelectorAll('.item-card');
+      for(const card of cards){
+        const codeEl = card.querySelector('.item-code');
+        if(codeEl && codeEl.textContent.trim()===itemCode){
+          // Update amount column cells
+          const amtCells = card.querySelectorAll('.amt-col');
+          lines.forEach((line,i)=>{
+            if(amtCells[i]){
+              amtCells[i].textContent = line.amount>0?line.amount.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'—';
+            }
+          });
+          // Update total row
+          const totalCell = card.querySelector('.total-row .amt-col, .total-row td:last-child');
+          if(totalCell) totalCell.textContent = total.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+          // Update rate badges
+          const badges = card.querySelectorAll('.rate-badge .value');
+          item.rates.forEach((r,i)=>{
+            if(badges[i]){const v=ratePerUnit*r.mult;badges[i].textContent=v>0?v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'—';}
+          });
+          break;
+        }
+      }
+      break;
+    }
+  }
+}
+
+function switchPriceTab(tab){ priceTab=tab; searchQuery=''; render(); }
+function updateRate(code,val){ if(val===''||val===null){delete userRates[code];}else{userRates[code]=parseFloat(val)||0;} saveToStorage(); }
+
+function clearPriceTab(){
+  if(!confirm('Clear all prices in this tab?')) return;
+  const items = priceTab==='materials'?MATERIALS:priceTab==='labour'?LABOUR:PLANT;
+  items.forEach(m=>delete userRates[m.code]);
+  saveToStorage(); render();
+  showToast(`Cleared all ${priceTab} prices`,'success'); // FIX: add toast
+}
+
+function resetAllRates(){
+  userRates={}; manualRates={}; manualModeItems=new Set();
+  saveToStorage(); closeModal('projectModal'); render();
+  showToast('All rates reset to zero','success');
+}
+
+// ============================================================
+// MODALS
+// ============================================================
+function showExportModal(){ document.getElementById('exportModal').classList.add('show'); }
+function showProjectModal(){
+  document.getElementById('projName').value=project.name;
+  document.getElementById('projClient').value=project.client;
+  document.getElementById('projBy').value=project.by;
+  document.getElementById('projDate').value=project.date||''; // FIX: new date field
+  document.getElementById('projCurrency').value=project.currency;
+  document.getElementById('projectModal').classList.add('show');
+}
+function showImportModal(){ document.getElementById('importModal').classList.add('show'); }
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+
+function saveProject(){
+  project.name=document.getElementById('projName').value||'BSR Rate Analysis';
+  project.client=document.getElementById('projClient').value;
+  project.by=document.getElementById('projBy').value;
+  project.date=document.getElementById('projDate').value; // FIX: save date
+  project.currency=document.getElementById('projCurrency').value||'Rs.';
+  saveToStorage(); closeModal('projectModal'); render();
+  showToast('Project settings saved','success');
+}
+
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.querySelector('.toast-icon').textContent=type==='success'?'✓':'✗';
+  document.getElementById('toastMsg').textContent=msg;
+  t.className=`toast ${type} show`;
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ============================================================
+// EXPORT FUNCTIONS
+// ============================================================
+function getExportData(sectionId){
+  const sections = sectionId==='all'?SECTIONS:SECTIONS.filter(s=>s.id===sectionId);
+  const rows=[];
+  const projLine = [project.name, project.client?`Client: ${project.client}`:'', project.by?`QS: ${project.by}`:'', project.date?`Date: ${project.date}`:'', '', `Currency: ${project.currency}`, ''];
+  rows.push(projLine);
+  rows.push([]);
+  sections.forEach(sec=>{
+    rows.push([`SECTION ${sec.id}: ${sec.title.toUpperCase()}`, '','','','','','']);
+    rows.push(['No.','Description','Ref','Unit','Qty','Rate','Amount']);
+    sec.items.forEach(item=>{
+      const {lines,total}=calcItem(item,sec.items);
+      const rpu=item.analysisQty>0?total/item.analysisQty:0;
+      const modeTag = manualModeItems.has(item.code)?'[Manual]':'';
+      rows.push([item.code,`${item.desc} ${modeTag}`.trim(),'',`Analysis: ${item.analysisQty} ${item.analysisUnit}`,'','','']);
+      lines.forEach(l=>{
+        const r=l.isSubRef?calcItemRate(l.ref,sec.items):(l.type==='percent'?'':getRate(l.ref));
+        rows.push([l.no,l.desc,l.ref||'',l.unit||'',l.qty||'',r||'',l.amount||0]);
+      });
+      rows.push(['','Total for '+item.analysisQty+' '+item.analysisUnit,'','','','',total]);
+      item.rates.forEach(r=>{rows.push(['','Rate per '+r.label,'','','','',rpu*r.mult]);});
+      const floorMult=[1,1.1,1.21,1.331];const floorNames=['Ground','1st','2nd','3rd'];
+      if(item.floors) floorMult.forEach((fm,i)=>rows.push(['','Floor Rate ('+floorNames[i]+' floor)','','','','',rpu*fm]));
+      rows.push([]);
+    });
+    rows.push([]);
+  });
+  return rows;
+}
+
+// FIX: Improved Excel export with professional formatting/structure
+function exportExcel(){
+  const sectionId=document.getElementById('exportSection').value;
+  const data=getExportData(sectionId);
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.aoa_to_sheet(data);
+
+  // Column widths
+  ws['!cols']=[{wch:14},{wch:60},{wch:10},{wch:14},{wch:8},{wch:14},{wch:16}];
+
+  // Row heights for headers (approximate via !rows)
+  ws['!rows'] = data.map(()=>({hpt:16}));
+
+  XLSX.utils.book_append_sheet(wb,'Rate Breakdown',ws);
+
+  // Basic Prices sheet
+  const bpHeaderRows=[
+    ['BSR RATE BREAKDOWN — BASIC PRICES','','',''],
+    [`Project: ${project.name}`,'',`Client: ${project.client}`,''],
+    [`Prepared by: ${project.by}`,'',`Date: ${project.date||new Date().toLocaleDateString()}`,''],
+    [],
+    ['MATERIALS','','',''],
+    ['Code','Description','Unit',`Rate (${project.currency})`],
+    ...MATERIALS.map(m=>[m.code,m.desc,m.unit,getRate(m.code)||'']),
+    [],
+    ['LABOUR','','',''],
+    ['Code','Description','Unit',`Rate (${project.currency})`],
+    ...LABOUR.map(m=>[m.code,m.desc,m.unit,getRate(m.code)||'']),
+    [],
+    ['PLANT','','',''],
+    ['Code','Description','Unit',`Rate (${project.currency})`],
+    ...PLANT.map(m=>[m.code,m.desc,m.unit,getRate(m.code)||'']),
+  ];
+  const bpws=XLSX.utils.aoa_to_sheet(bpHeaderRows);
+  bpws['!cols']=[{wch:10},{wch:55},{wch:10},{wch:14}];
+  XLSX.utils.book_append_sheet(wb,'Basic Prices',bpws);
+
+  XLSX.writeFile(wb,`BSR_Rate_Breakdown_${sectionId}_${new Date().toISOString().slice(0,10)}.xlsx`);
+  closeModal('exportModal');
+  showToast('Excel file downloaded','success');
+}
+
+function exportSectionExcel(sectionId){
+  const data=getExportData(sectionId);
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.aoa_to_sheet(data);
+  ws['!cols']=[{wch:14},{wch:60},{wch:10},{wch:14},{wch:8},{wch:14},{wch:16}];
+  const sec=SECTIONS.find(s=>s.id===sectionId);
+  XLSX.utils.book_append_sheet(wb,ws,sec?sec.title.slice(0,31):'Breakdown');
+  XLSX.writeFile(wb,`BSR_${sectionId}_${new Date().toISOString().slice(0,10)}.xlsx`);
+  showToast('Section Excel exported','success');
+}
+
+function exportCSV(){
+  const sectionId=document.getElementById('exportSection').value;
+  const data=getExportData(sectionId);
+  const csv=data.map(row=>row.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`BSR_Rates_${sectionId}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  closeModal('exportModal');
+  showToast('CSV file downloaded','success');
+}
+
+// FIX: Professional PDF export with project header and proper template
+function exportPDF(){
+  const sectionId=document.getElementById('exportSection').value;
+  const sections=sectionId==='all'?SECTIONS:SECTIONS.filter(s=>s.id===sectionId);
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+  const PW=doc.internal.pageSize.getWidth(); // 297mm
+  const PH=doc.internal.pageSize.getHeight(); // 210mm
+  const projDate=project.date||new Date().toLocaleDateString();
+
+  // Helper: draw page header
+  function drawPageHeader(doc,pageNum){
+    // Top bar background
+    doc.setFillColor(11,25,41); // --navy
+    doc.rect(0,0,PW,18,'F');
+    // Accent stripe
+    doc.setFillColor(0,194,203); // --teal
+    doc.rect(0,18,PW,1.5,'F');
+    // Logo box
+    doc.setFillColor(0,194,203);
+    doc.roundedRect(10,3,14,12,1,1,'F');
+    doc.setFontSize(8); doc.setTextColor(11,25,41); doc.setFont('helvetica','bold');
+    doc.text('BSR',13.5,10.5);
+    // Title
+    doc.setFontSize(12); doc.setTextColor(255,255,255);
+    doc.text('BSR Rate Breakdown — QS Professional Tool',28,10);
+    // Project info right side
+    doc.setFontSize(7); doc.setTextColor(138,179,214);
+    const projInfo=`${project.name}  |  ${project.client?project.client+'  |  ':''}${project.by?'QS: '+project.by+'  |  ':''}Date: ${projDate}`;
+    doc.text(projInfo,PW-10,10,{align:'right'});
+    // Page number
+    doc.setFontSize(7); doc.setTextColor(90,138,176);
+    doc.text(`Page ${pageNum}`,PW-10,16,{align:'right'});
+  }
+
+  let pageNum=1;
+  drawPageHeader(doc,pageNum);
+  let startY=26;
+
+  sections.forEach((sec,secIdx)=>{
+    // Section header
+    if(startY>170){doc.addPage();pageNum++;drawPageHeader(doc,pageNum);startY=26;}
+    doc.setFillColor(15,33,56);
+    doc.rect(10,startY,PW-20,7,'F');
+    doc.setFillColor(0,194,203);
+    doc.rect(10,startY,3,7,'F');
+    doc.setFontSize(9); doc.setTextColor(255,255,255); doc.setFont('helvetica','bold');
+    doc.text(`SECTION ${sec.id}: ${sec.title.toUpperCase()}`,16,startY+4.8);
+    doc.setFontSize(7); doc.setTextColor(0,194,203); doc.setFont('helvetica','normal');
+    doc.text(`${sec.items.length} items`,PW-14,startY+4.8,{align:'right'});
+    startY+=10;
+
+    sec.items.forEach(item=>{
+      const {lines,total}=calcItem(item,sec.items);
+      const rpu=item.analysisQty>0?total/item.analysisQty:0;
+      const useManual=manualModeItems.has(item.code);
+
+      const tableData=[
+        ...lines.map(l=>{
+          const r=l.isSubRef?calcItemRate(l.ref,sec.items):(l.type==='percent'?'':(useManual?((manualRates[item.code]||{})[l.no]||0):getRate(l.ref)));
+          const rStr=l.type==='percent'?`${(l.pct*100).toFixed(1)}%`:(r>0?parseFloat(r).toFixed(2):'-');
+          return [l.no||'',l.desc,l.ref||'',l.unit||'',l.qty!==undefined?l.qty:'',rStr,l.amount>0?l.amount.toFixed(2):''];
+        }),
+        ['',`Total for ${item.analysisQty} ${item.analysisUnit}`,'','','','',total.toFixed(2)],
+        ...item.rates.map(r=>['',`Rate per ${r.label}`,'','','','',r.mult>0?(rpu*r.mult).toFixed(2):'—']),
+      ];
+      if(item.floors){
+        const floorMult=[1,1.1,1.21,1.331];
+        const floorNames=['Ground','1st Floor','2nd Floor','3rd Floor'];
+        floorMult.forEach((fm,i)=>tableData.push(['',`Floor Rate (${floorNames[i]})`,'','','','',rpu>0?(rpu*fm).toFixed(2):'—']));
+      }
+
+      const itemTitle=`${item.code}${useManual?' [Manual Mode]':''}  —  ${item.desc.length>80?item.desc.slice(0,80)+'…':item.desc}  (Analysis: ${item.analysisQty} ${item.analysisUnit})`;
+
+      doc.autoTable({
+        startY,
+        head:[[{content:itemTitle,colSpan:7,styles:{fillColor:[26,51,82],textColor:[0,194,203],fontStyle:'bold',fontSize:7.5}}]],
+        body:tableData,
+        columns:[
+          {header:'No.',dataKey:0},{header:'Description',dataKey:1},{header:'Ref',dataKey:2},
+          {header:'Unit',dataKey:3},{header:'Qty',dataKey:4},{header:'Rate',dataKey:5},{header:'Amount',dataKey:6}
+        ],
+        styles:{fontSize:7,cellPadding:1.8,textColor:[180,210,240]},
+        headStyles:{fillColor:[11,25,41],textColor:[0,194,203],fontSize:7,fontStyle:'bold'},
+        alternateRowStyles:{fillColor:[14,30,50]},
+        bodyStyles:{fillColor:[15,35,55]},
+        columnStyles:{
+          0:{cellWidth:13,textColor:[90,138,176]},
+          1:{cellWidth:88,textColor:[220,240,255]},
+          2:{cellWidth:16,textColor:[90,138,176]},
+          3:{cellWidth:14,textColor:[90,138,176]},
+          4:{cellWidth:14,halign:'right',textColor:[180,210,240]},
+          5:{cellWidth:20,halign:'right',textColor:[240,165,0]},
+          6:{cellWidth:22,halign:'right',textColor:[0,229,239]},
+        },
+        didParseCell:(data)=>{
+          const ri=data.row.index;
+          const totalIdx=lines.length;
+          // Total row
+          if(ri===totalIdx){
+            data.cell.styles.fillColor=[20,50,80];
+            data.cell.styles.fontStyle='bold';
+            if(data.column.index===6) data.cell.styles.textColor=[255,194,51];
+          }
+          // Rate rows
+          if(ri>totalIdx){
+            data.cell.styles.fillColor=[15,35,55];
+            data.cell.styles.textColor=[0,194,203];
+            if(data.column.index===6) data.cell.styles.fontStyle='bold';
+          }
+          // Percent rows
+          if(data.row.index<totalIdx && tableData[ri]&&tableData[ri][2]===''&&tableData[ri][5]&&tableData[ri][5].endsWith('%')){
+            data.cell.styles.textColor=[90,138,176];
+            data.cell.styles.fontStyle='italic';
+          }
+        },
+        margin:{left:10,right:10},
+        tableWidth:PW-20,
+      });
+
+      startY=doc.lastAutoTable.finalY+4;
+      if(startY>190){doc.addPage();pageNum++;drawPageHeader(doc,pageNum);startY=26;}
+    });
+  });
+
+  // Footer on last page
+  doc.setFontSize(7); doc.setTextColor(90,138,176);
+  doc.text(`Generated by BSR RateCalc Pro  •  ${new Date().toLocaleString()}  •  All rates in ${project.currency}  •  BSR norms: Dept. of Buildings, Sri Lanka (ICTAD)  •  Unofficial tool — verify before official use`,PW/2,PH-5,{align:'center'});
+
+  doc.save(`BSR_Rate_Breakdown_${sectionId}_${new Date().toISOString().slice(0,10)}.pdf`);
+  closeModal('exportModal');
+  showToast('PDF downloaded','success');
+}
+
+// FIX: Section PDF now opens export modal pre-selected instead of silent export
+function exportSectionPDF(sectionId){
+  document.getElementById('exportSection').value=sectionId;
+  exportPDF();
+  showToast(`PDF for Section ${sectionId} downloaded`,'success');
+}
+
+function importCSV(){
+  const file=document.getElementById('csvFile').files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const lines=e.target.result.split('\n');
+    let count=0;
+    lines.forEach(line=>{
+      const [code,rate]=line.split(',').map(s=>s.trim().replace(/"/g,''));
+      if(code&&rate&&!isNaN(parseFloat(rate))){userRates[code]=parseFloat(rate);count++;}
+    });
+    saveToStorage(); closeModal('importModal'); render();
+    showToast(`${count} rates imported successfully`,'success');
+  };
+  reader.readAsText(file);
+}
+
+// ============================================================
+// LEGAL DISCLAIMER — Show on first visit, remember acceptance
+// ============================================================
+function acceptDisclaimer(){
+  try{ localStorage.setItem('bsr_disclaimer_accepted','1'); }catch(e){}
+  document.getElementById('disclaimerModal').style.display='none';
+}
+function checkDisclaimer(){
+  try{
+    if(localStorage.getItem('bsr_disclaimer_accepted')==='1'){
+      document.getElementById('disclaimerModal').style.display='none';
+    }
+  }catch(e){
+    document.getElementById('disclaimerModal').style.display='none';
+  }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+loadFromStorage();
+buildSidebar();
+navigate('dashboard');
+checkDisclaimer();
+</script>
+<!-- ===== LEGAL FOOTER BAR ===== -->
+<div style="position:fixed;bottom:0;left:0;right:0;background:#0b1929;border-top:1px solid #1e3d63;padding:5px 20px;display:flex;align-items:center;justify-content:space-between;z-index:50;flex-wrap:wrap;gap:6px;">
+  <span style="font-size:10px;color:#5a8ab0;">
+    © 2025 <strong style="color:#8ab3d6;">BSR RateCalc Pro</strong> &nbsp;|&nbsp; App design &amp; engine rights reserved
+  </span>
+  <span style="font-size:10px;color:#5a8ab0;text-align:center;">
+    BSR norms sourced from: <strong style="color:#8ab3d6;">Building Schedule of Rates, Dept. of Buildings, Sri Lanka (ICTAD)</strong>
+  </span>
+  <span style="font-size:10px;color:#5a8ab0;">
+    <button onclick="document.getElementById('disclaimerModal').style.display='flex';" style="background:none;border:none;color:#00c2cb;font-size:10px;cursor:pointer;padding:0;font-family:'DM Sans',sans-serif;">⚖️ Legal Notice</button>
+    &nbsp;|&nbsp; Unofficial Tool — Not for official use
+  </span>
+</div>
+<div style="height:32px;"></div>
+<!-- ===== END LEGAL FOOTER BAR ===== -->
+</body>
+</html>
